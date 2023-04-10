@@ -2,14 +2,25 @@ import 'zone.js/dist/zone';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { fakeAsync } from '@angular/core/testing';
+import { Puzzle } from './puzzle';
+import { Timer } from './timer';
+import { GameMode } from './game-mode.enum';
+import { ScoreService } from './score.service';
+import { SettingsService } from './settings.service';
+import { PuzzleLetter } from './puzzle-letter';
+import { PuzzleBoardComponent } from './puzzle-board/puzzle-board.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @Component({
-  selector: 'my-app',
+  selector: 'wof-app',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PuzzleBoardComponent, SettingsComponent],
+  providers: [ScoreService, SettingsService],
+  templateUrl: './main.html',
+  /*
   template: `
     <h1>Wheel Of Fortune</h1>
+    <puzzel
     <table>
         <tr *ngFor="let row in puzzle">
           <td *ngFor="let l in row">
@@ -22,233 +33,22 @@ import { fakeAsync } from '@angular/core/testing';
       Learn more about Angular 
     </a>
   `,
+  */
 })
 
-export class PuzzleLetter {
-  private letter: string = ' ';
-  private visible: boolean = false;
-  constructor(l: string) {
-    this.set(l);
-  }
-  public set(l: string) {
-    this.letter = l.trim();
-    if (this.letter.length == 0) {
-      this.letter = ' ';
-    } else if (this.letter.length != 1) {
-      throw Error('Invalid lengt');
-    }
-    this.visible = false;
-  }
-  public get(): string {
-    return this.visible ? this.letter : ' ';
-  }
-  public peak(): string {
-    return this.letter;
-  }
-  public isVisible(): boolean {
-    return this.visible;
-  }
-  public isLetter(l: string): boolean {
-    if (l.trim().length > 1) {
-      throw Error('Invalid length');
-    }
-
-    return this.letter === l;
-  }
-  public reveal(l: string): boolean {
-    if (this.isLetter(l)) {
-      this.visible = true;
-
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-class Player {
-  public name: string = '';
-  public score: number = 0;
-  public totalScore: number = 0;
-  public roundScore: number[];
-  public updateTotal() {
-    this.totalScore = this.roundScore.reduce(
-      (total, roundScore) => total + roundScore,
-      0
-    );
-  }
-  public roundOver(won: boolean) {
-    if (won) {
-      this.totalScore += this.score;
-      this.roundScore.push(this.score);
-      this.score = 0;
-    } else {
-      this.roundScore.push(0);
-      this.score = 0;
-    }
-  }
-}
-class ScoreBoard {
-  private players: Player[];
-  private currentPlayer: number = 0;
-  private readonly vowelCost: number = 250;
-
-  public addPlayer(fullname: string): boolean {
-    if (
-      !this.players.some(
-        (player) =>
-          player.name.trim().toUpperCase() === fullname.trim().toUpperCase()
-      )
-    ) {
-      let p = new Player();
-      p.name = fullname;
-      this.players.push(p);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  private get(i?: number) {
-    return this.players[
-      (i ?? -1) < 0 || i >= this.players.length ? this.currentPlayer : i
-    ];
-  }
-
-  public getName(i?: number): string {
-    return this.get(i).name;
-  }
-  public getScore(i?: number): number {
-    return this.get(i).score;
-  }
-  public getTotalScore(i?: number): number {
-    return this.get(i).totalScore;
-  }
-  public getRounds(i?: number): number[] {
-    return this.get(i).roundScore;
-  }
-  public count(): number {
-    return this.players.length;
-  }
-  public roundWon() {
-    this.players.forEach((p, index) => {
-      p.roundOver(index == this.currentPlayer);
-    });
-  }
-
-  public bankrupt() {
-    this.players[this.currentPlayer].score = 0;
-  }
-
-  public getWinnerIndexes(): number[] {
-    let maxScore: number = -1;
-    let winnerIndexes: number[];
-    this.players.forEach((p, i) => {
-      if (p.totalScore > maxScore) {
-        winnerIndexes = [];
-        winnerIndexes.push(i);
-      } else if (p.totalScore == maxScore) {
-        winnerIndexes.push(i);
-      }
-    });
-
-    return winnerIndexes;
-  }
-
-  public currentIndex() {
-    return this.currentPlayer;
-  }
-
-  public nextPlayer() {
-    this.currentPlayer++;
-    if (this.currentPlayer >= this.players.length) {
-      this.currentPlayer = 0;
-    }
-  }
-
-  public addScore(points: number, letterCount: number) {
-    this.get().score += points * letterCount;
-  }
-  public canBuyVowel(): boolean {
-    return this.get().score >= this.vowelCost;
-  }
-
-  public buyVowel(letterCount: number): boolean {
-    if (letterCount > 0 && this.canBuyVowel()) {
-      this.get().score -= this.vowelCost;
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
-export enum GameMode {
-  Setup,
-  Regular,
-  TossUp,
-  Train,
-  BonusRound,
-}
-
-class Puzzle {
-  public Title: string;
-  public Text: string;
-}
-
-class Timer {
-  private timerId: number;
-  private start: number;
-  private remaining: number;
-  private callback: Function;
-  constructor(callback: Function, seconds: number) {
-    this.callback = callback;
-    this.remaining = seconds * 1000;
-    this.resume();
-  }
-  public isPaused(): boolean {
-    return !this.timerId;
-  }
-  public getStart(): Date {
-    return new Date(this.start);
-  }
-  public getRemainingTime(): number {
-    return this.isPaused()
-      ? this.remaining
-      : this.remaining - (Date.now() - this.start);
-  }
-  public pause(): boolean {
-    if (!this.timerId) {
-      return false;
-    }
-
-    clearTimeout(this.timerId);
-    this.timerId = null;
-    this.remaining -= Date.now() - this.start;
-    return true;
-  }
-  public resume(): boolean {
-    if (this.timerId) {
-      return false;
-    }
-
-    this.start = Date.now();
-    this.timerId = setTimeout(this.callback, this.remaining);
-  }
-}
-
 export class App {
-  name = 'WheelOfFortune';
+  name = 'Wheel Of Fortune';
   private readonly vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
   private readonly bonusRoundLetters: string[] = ['r', 's', 't', 'l', 'n', 'e'];
-  private readonly bonusPuzzleCount: number = 4;
   private puzzles: Puzzle[];
+  private puzzleIndex: number = 0;
   private bonusPuzzle: Puzzle[];
   private bonusPuzzleIndex: number = -1;
-  private puzzleIndex: number = 0;
-  private puzzleCount: number = 3;
+  private tossUpPuzzle:Puzzle[];
+  private tossUpPuzzelIndex:number = -1;
 
+  ///Keep track of total game time
   private gameTimer: Timer;
-  private gameTimeSeconds: number = 22 * 60;
 
   //Letter grid
   //12
@@ -256,45 +56,62 @@ export class App {
   //14
   //12
   private puzzle: PuzzleLetter[][];
+  get PuzzleGrid() { return this.puzzle; }
   private readonly gridLength: number[] = [12, 14, 14, 12];
-  private score: ScoreBoard;
   private mode: GameMode = GameMode.Setup;
   private lettersGuessed: string[];
-  private noMoreVowels:Boolean = false;
+  private noMoreVowels:boolean = false;
+  get NoMoreVowels(): boolean { return this.noMoreVowels; }
+  get PuzzleTitle():string { return this.mode == GameMode.Regular ? this.puzzles[this.puzzleIndex].Title : "Test"; }
+
+  constructor(private score: ScoreService, private settings: SettingsService){}
 
   public addPlayer(name: string): boolean {
-    if (this.mode == GameMode.Setup) {
+    if (this.mode == GameMode.Setup && this.score.count() < this.settings.getSettings().MaxPlayerCount) {
       return this.score.addPlayer(name);
     } else {
       return false;
     }
   }
 
-  public addPuzzle(
-    title: string,
-    text: string,
-    isBonus: boolean = false
-  ): boolean {
+  public addBonusPuzzle(title: string, text:string):boolean{
     if (this.mode == GameMode.Setup) {
-      if (isBonus) {
-        if (
-          !this.bonusPuzzle.some(
-            (p) => p.Title.trim().toUpperCase() === title.trim().toUpperCase()
-          ) &&
-          this.bonusPuzzle.length < this.bonusPuzzleCount
-        ) {
-          this.bonusPuzzle.push({ Title: title, Text: text });
+      if (
+        !this.bonusPuzzle.some(
+          (p) => p.Title.trim().toUpperCase() === title.trim().toUpperCase()
+        ) &&
+        this.bonusPuzzle.length < this.settings.getSettings().BonusPuzzelCount
+      ) {
+        this.bonusPuzzle.push({ Title: title, Text: text });
           return true;
-        } else {
-          return false;
-        }
       } else {
-        if (this.puzzles.length < this.puzzleCount) {
-          this.puzzles.push({ Title: title, Text: text });
-          return true;
-        } else {
-          return false;
-        }
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  public addTossUpPuzzle(title: string, text: string): boolean {
+    if (this.mode == GameMode.Setup) {
+      if (this.tossUpPuzzle.length < this.settings.getTossUpCount()) {
+        this.tossUpPuzzle.push({ Title: title, Text: text });
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  public addPuzzle(title: string, text: string): boolean {
+    if (this.mode == GameMode.Setup) {
+      if (this.puzzles.length < this.settings.getSettings().NumberOfRounds) {
+        this.puzzles.push({ Title: title, Text: text });
+        return true;
+      } else {
+        return false;
       }
     } else {
       return false;
@@ -306,7 +123,7 @@ export class App {
       this.mode = GameMode.Regular;
       this.gameTimer = new Timer(() => {
         this.mode = GameMode.Train;
-      }, this.gameTimeSeconds);
+      }, this.settings.getSettings().TotalGameTimeSeconds);
       return true;
     } else {
       return false;
