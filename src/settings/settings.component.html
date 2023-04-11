@@ -1,1 +1,16 @@
-<p> test </p>
+<h2>Settings</h2>
+<form (ngSubmit)="onSubmit($event)">
+<label>Game Time (min): </label>
+<input type="number" value="{{Setttings.TotalGameTimeSeconds/60}}">
+<br>
+<label>Bonus Solve Time (sec): </label>
+<input type="number" value="{{Setttings.BonusSolveTimeSeconds}}">
+<br>
+<label>Tripple Toss Up: </label>
+<input type="checkbox" value="{{Setttings.TrippleTossUp}}">
+<br>
+<label>Max Players: </label>
+<input type="number" value="{{Setttings.MaxPlayerCount}}">
+<br>
+<button>Save</button>
+</form>

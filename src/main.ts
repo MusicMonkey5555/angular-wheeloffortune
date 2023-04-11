@@ -47,13 +47,15 @@ export class App {
   get NoMoreVowels(): boolean { return this.noMoreVowels; }
   get PuzzleTitle():string { return this.mode == GameMode.Regular ? this.puzzles[this.puzzleIndex].Title : "Test"; }
   get Players() { return this.score.Players; }
+  get Mode() { return this.mode; }
 
   constructor(private score: ScoreService, private settings: SettingsService){
+    /*
     this.addPuzzle("90's", "Puzzle text");
     this.addPlayer("Nathan Bowhay");
     this.startGame();
     this.guessLetter('z', 100);
-    console.log(this.puzzle);
+    */
   }
 
   private maxPuzzleLength():number {

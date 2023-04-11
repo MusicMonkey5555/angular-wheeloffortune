@@ -1,3 +1,5 @@
 <h1 class="game-title">Wheel Of Fortune</h1>
-<app-puzzle-board [puzzle]="PuzzleGrid" [title]="PuzzleTitle"></app-puzzle-board>
+<app-puzzle-board [hidden]="Mode === 0" [puzzle]="PuzzleGrid" [title]="PuzzleTitle"></app-puzzle-board>
 <h2 *ngFor="let player of Players">{{player.Name}}: {{player.Score}}</h2>
+<app-settings [hidden]="Mode !== 0"></app-settings>
+<button>Restart Game</button>
