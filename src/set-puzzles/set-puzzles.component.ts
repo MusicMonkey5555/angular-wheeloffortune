@@ -20,7 +20,7 @@ export class SetPuzzlesComponent implements OnInit {
   private _puzzles: GamePuzzles;
   private puzzleGrid:PuzzleGrid;
 
-  public PuzzleTypeNames:any = {normal: "Normal", tossUp: "Toss Up", bonus: "Bonus"};
+  public PuzzleTypeNames:any = {normal: "Normal", tossUp: "Toss-Up", bonus: "Bonus"};
 
   @Input()
   get puzzles():GamePuzzles { return this._puzzles; };

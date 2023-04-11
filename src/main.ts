@@ -58,7 +58,16 @@ export class App {
   constructor(private score: ScoreService, private settings: SettingsService){
     this.addPuzzle("90's", "Boom Box");
     this.addPuzzle("Video Games", "Mine Craft");
-    console.log(this.GamePuzzles)
+    this.addPuzzle("People", "Nathan");
+
+    this.addTossUpPuzzle("90's", "Boom Box");
+    this.addTossUpPuzzle("Video Games", "Mine Craft");
+    this.addTossUpPuzzle("People", "Nathan");
+
+    this.addBonusPuzzle("90's", "Boom Box");
+    this.addBonusPuzzle("People", "Monroe");
+    this.addBonusPuzzle("People", "Nathan");
+
     this.addPlayer("Nathan Bowhay");
     /*
     this.startGame();
@@ -159,8 +168,32 @@ export class App {
     }
   }
 
+  public canStartGame():boolean{
+    if(this.Players.length <= 1 || 
+      this.Players.length > this.settings.Settings.MaxPlayerCount ||
+      [...new Set(this.Players.map(p => p.Name.trim().toUpperCase()))].length != this.Players.length){
+      return false;
+    }
+    if(this.puzzles.normal.length != this.settings.Settings.NumberOfRounds || 
+      this.puzzles.normal.some((p) => p.Text.trim() == "" || p.Title.trim() == "")){
+      return false;
+    }
+    if(this.puzzles.tossUp.length != this.settings.TossUpCount ||
+      this.puzzles.tossUp.some((p) => p.Text.trim() == "" || p.Title.trim() == "")){
+      return false;
+    }
+    let uniqueTitles = [...new Set(this.puzzles.bonus.map(p => p.Title.trim().toUpperCase()))];
+    if(this.puzzles.bonus.length != this.settings.Settings.BonusPuzzleCount ||
+      this.puzzles.bonus.some((p) => p.Text.trim() == "" || p.Title.trim() == "") ||
+      uniqueTitles.length != this.settings.Settings.BonusPuzzleCount){
+      return false;
+    }
+
+    return true;;
+  }
+
   public startGame(): boolean {
-    if (this.mode == GameMode.Setup) {
+    if (this.mode == GameMode.Setup && this.canStartGame()) {
       this.mode = GameMode.Regular;
       this.nextPuzzle();
       this.gameTimer = new Timer(() => {

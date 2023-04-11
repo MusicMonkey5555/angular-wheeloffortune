@@ -44,7 +44,7 @@
   ></app-set-puzzles>
   <div [hidden]="!(Mode === 0 && editSetting === 'players')" class="form-group">
     <input [hidden]="Players.length >= Settings.MaxPlayerCount" #newPlayerName type="text" placeholder="Player Name">
-    <button class="button green" [hidden]="Players.length >= Settings.MaxPlayerCount" (click)="addPlayer(newPlayerName.value)">Add Player</button>
+    <button class="button green" [hidden]="Players.length >= Settings.MaxPlayerCount" (click)="addPlayer(newPlayerName.value);newPlayerName.value = '';">Add Player</button>
     <span>{{Players.length}} of {{Settings.MaxPlayerCount}}</span>
     <ul>
       <li *ngFor="let player of Players; index as i">
@@ -54,3 +54,4 @@
     </ul>
   </div>
 </div>
+<button *ngIf="Mode === 0 && Players.length > 1" class="button green" (click)="startGame()">Start Game</button>
