@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PuzzleGrid } from '../puzzle-grid';
 import { PuzzleLetter } from '../puzzle-letter';
 import { GamePuzzles } from '../game-puzzles';
@@ -38,14 +38,22 @@ export class SetPuzzlesComponent implements OnInit {
     this.currentPuzzleIndex = 0;
     this.puzzleType = "normal";
     this._puzzles = puzzles;
+    this.CurrentPuzzle;
+    this.updateGrid();
   }
   @Input() maxPuzzleLength: number;
   @Input() gridLength: number[];
+
+  @Output() onSavedChanges = new EventEmitter<GamePuzzles>();
 
   get PuzzleGrid():PuzzleLetter[][] { return this.puzzleGrid ? this.puzzleGrid.Puzzle : null; }
 
   get CurrentPuzzle():Puzzle{
     return this._puzzles[this.puzzleType][this.currentPuzzleIndex];
+  }
+
+  public saveChanges(){
+    this.onSavedChanges.emit(this._puzzles);
   }
 
   public updateGrid(){
@@ -79,13 +87,15 @@ export class SetPuzzlesComponent implements OnInit {
 
   constructor(private settings: SettingsService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   public onTitleKey(title: string){
     this.CurrentPuzzle.Title = title;
   }
   public onTextKey(text: string){
     this.CurrentPuzzle.Text = text;
+    this.puzzleGrid = null;
     this.updateGrid();
   }
 }

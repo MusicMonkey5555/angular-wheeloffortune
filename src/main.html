@@ -1,11 +1,56 @@
 <h1 class="game-title">{{name}}</h1>
-<app-puzzle-board *ngIf="Mode !== 0" [puzzle]="PuzzleGrid.Puzzle" [title]="PuzzleTitle"></app-puzzle-board>
-<h2 [hidden]="Mode === 0" *ngFor="let player of Players">{{player.Name}}: {{player.Score}}</h2>
+<app-puzzle-board
+  *ngIf="Mode !== 0"
+  [puzzle]="PuzzleGrid.Puzzle"
+  [title]="PuzzleTitle"
+></app-puzzle-board>
+<h2 [hidden]="Mode === 0" *ngFor="let player of Players">
+  {{player.Name}}: {{player.Score}}
+</h2>
 <button [hidden]="Mode == 0">Restart Game</button>
 
-<button [hidden]="Mode !== 0" [ngClass]="showSettings ? 'toggle-tab-on' : 'toggle-tab-off'" (click)="showSettings = true">Settings</button>
-<button [hidden]="Mode !== 0" [ngClass]="!showSettings ? 'toggle-tab-on' : 'toggle-tab-off'" class="button-pad" (click)="showSettings = false">Set Puzzles</button>
+<button
+  [hidden]="Mode !== 0"
+  [ngClass]="editSetting === 'settings' ? 'toggle-tab-on' : 'toggle-tab-off'"
+  (click)="editSetting = 'settings'"
+>
+  Settings
+</button>
+<button
+  [hidden]="Mode !== 0"
+  [ngClass]="editSetting === 'puzzles' ? 'toggle-tab-on' : 'toggle-tab-off'"
+  (click)="editSetting = 'puzzles'"
+>
+  Set Puzzles
+</button>
+<button
+  [hidden]="Mode !== 0"
+  [ngClass]="editSetting === 'players' ? 'toggle-tab-on' : 'toggle-tab-off'"
+  (click)="editSetting = 'players'"
+>
+  Players
+</button>
 <div class="tab-box">
-  <app-settings *ngIf="(Mode === 0 && showSettings)" (onSavedChanges)="onSettingsSaved()"></app-settings>
-  <app-set-puzzles *ngIf="(Mode === 0 && !showSettings)" [puzzles]="GamePuzzles" [maxPuzzleLength]="maxPuzzleLength()" [gridLength]="GridLength"></app-set-puzzles>
-</div> 
+  <app-settings
+    *ngIf="(Mode === 0 && editSetting === 'settings')"
+    (onSavedChanges)="onSettingsSaved($event)"
+  ></app-settings>
+  <app-set-puzzles
+    *ngIf="(Mode === 0 && editSetting === 'puzzles')"
+    [puzzles]="GamePuzzles"
+    [maxPuzzleLength]="maxPuzzleLength()"
+    [gridLength]="GridLength"
+    (onSavedChanges)="onPuzzlesSaved($event)"
+  ></app-set-puzzles>
+  <div [hidden]="!(Mode === 0 && editSetting === 'players')" class="form-group">
+    <input [hidden]="Players.length >= Settings.MaxPlayerCount" #newPlayerName type="text" placeholder="Player Name">
+    <button class="button green" [hidden]="Players.length >= Settings.MaxPlayerCount" (click)="addPlayer(newPlayerName.value)">Add Player</button>
+    <span>{{Players.length}} of {{Settings.MaxPlayerCount}}</span>
+    <ul>
+      <li *ngFor="let player of Players; index as i">
+        {{player.Name}}
+        <button (click)="removePlayer(i)">Remove</button>
+      </li>
+    </ul>
+  </div>
+</div>

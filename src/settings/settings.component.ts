@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Settings } from '../settings';
 import { SettingsService } from '../settings.service';
 
 @Component({
@@ -12,7 +13,7 @@ import { SettingsService } from '../settings.service';
 })
 export class SettingsComponent implements OnInit {
 
-  @Output() onSavedChanges = new EventEmitter<boolean>();
+  @Output() onSavedChanges = new EventEmitter<Settings>();
 
   constructor(private settings:SettingsService, private formBuilder:FormBuilder) { }
 
@@ -40,7 +41,9 @@ export class SettingsComponent implements OnInit {
     settings.NumberOfRounds = controls.roundCount.value;
     settings.BonusPuzzleCount = controls.bonusPuzzleCount.value;
 
-    this.onSavedChanges.emit(true);
+    console.log(this.settings.Settings);
+
+    this.onSavedChanges.emit(this.settings.Settings);
   }
 
   onReset(){

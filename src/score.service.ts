@@ -24,6 +24,10 @@ export class ScoreService {
     }
   }
 
+  public removePlayer(i:number):boolean{
+    return this.players.splice(i,1).length > 0;
+  }
+
   get Players():Player[] { return this.players; }
   get CurrentPlayer():Player { return this.players[this.currentPlayerIndex]; }
   get CurrentPlayerIndex():number { return this.currentPlayerIndex; }

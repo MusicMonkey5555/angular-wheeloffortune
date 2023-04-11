@@ -7,12 +7,13 @@
   <input class="puzzle-text" id="puzzleText" #puzzleText type="text" (keyup)="onTextKey(puzzleText.value)" value="{{CurrentPuzzle.Text}}">
   <br>
   <br>
-  <button class="button" (click)="updateGrid()">Preview</button>
+  <button class="button" (click)="updateGrid()">Refresh</button>
   <app-puzzle-board ngIf="PuzzleGrid" [puzzle]="PuzzleGrid" [title]="CurrentPuzzle.Title"></app-puzzle-board>
   <div>
-    <button *ngFor="let puzzle of puzzles[PuzzleType]; index as i" (click)="updateCurrentPuzzle(i)">Normal</button>
+    <button *ngFor="let puzzle of puzzles[PuzzleType]; index as i" (click)="updateCurrentPuzzle(i)">{{i+1}}</button>
   </div>
   <button (click)="PuzzleType='normal'">Normal</button>
   <button (click)="PuzzleType='tossUp'">Toss-Up</button>
   <button (click)="PuzzleType='bonus'">Bonus</button>
+  <button class="button green" (click)="saveChanges()">Save</button>
 </div>

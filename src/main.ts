@@ -13,6 +13,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { GamePuzzles } from './game-puzzles';
 import { SetPuzzlesComponent } from './set-puzzles/set-puzzles.component';
 import { PuzzleGrid } from './puzzle-grid';
+import { Settings } from './settings';
 
 @Component({
   selector: 'wof-app',
@@ -50,13 +51,14 @@ export class App {
   get NoMoreVowels(): boolean { return this.noMoreVowels; }
   get PuzzleTitle():string { return this.getCurrentPuzzle().Title; }
   get Players() { return this.score.Players; }
+  get Settings() {return this.settings.Settings; }
   get Mode() { return this.mode; }
-  showSettings:boolean = true;
+  editSetting:string = "settings";
 
   constructor(private score: ScoreService, private settings: SettingsService){
-    /*
     this.addPuzzle("90's", "Puzzle text");
     this.addPlayer("Nathan Bowhay");
+    /*
     this.startGame();
     this.guessLetter('z', 100);
     */
@@ -79,8 +81,11 @@ export class App {
     return puzzle;
   }
 
-  public onSettingsSaved(){
-    this.showSettings = false;
+  public onSettingsSaved(event:Settings){
+  }
+
+  public onPuzzlesSaved(event:GamePuzzles){
+    this.puzzles = event;
   }
 
   public maxPuzzleLength():number {
@@ -95,6 +100,14 @@ export class App {
   public addPlayer(name: string): boolean {
     if (this.mode == GameMode.Setup && this.Players.length < this.settings.Settings.MaxPlayerCount) {
       return this.score.addPlayer(name);
+    } else {
+      return false;
+    }
+  }
+
+  public removePlayer(i: number): boolean {
+    if (this.mode == GameMode.Setup && this.Players.length > 0) {
+      return this.score.removePlayer(i);
     } else {
       return false;
     }
