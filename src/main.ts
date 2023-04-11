@@ -66,9 +66,14 @@ export class App {
 
     this.addBonusPuzzle("90's", "Boom Box");
     this.addBonusPuzzle("People", "Monroe");
-    this.addBonusPuzzle("People", "Nathan");
+    this.addBonusPuzzle("Thing", "Table & Chairs");
+    //this.addBonusPuzzle("People", "Nathan");
 
     this.addPlayer("Nathan Bowhay");
+    this.addPlayer("Monroe");
+
+    this.startGame();
+    this.guessLetter('b', 100);
     /*
     this.startGame();
     this.guessLetter('z', 100);

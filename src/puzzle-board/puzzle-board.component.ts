@@ -11,6 +11,7 @@ import { PuzzleLetter } from '../puzzle-letter';
 })
 export class PuzzleBoardComponent implements OnInit {
   private _letterGrid:PuzzleLetter[][] = [[]];
+  private _puzzleTitle:string;
   private _maxCells:number = 0;
   get maxCells():number {return this._maxCells;}
 
@@ -20,7 +21,11 @@ export class PuzzleBoardComponent implements OnInit {
     this._maxCells = [...puzzle].sort((a, b) => b.length-a.length)[0].length;
     this._letterGrid = puzzle;
   }
-  @Input('title') puzzleTitle:string;
+  @Input('title') 
+  get puzzleTitle():string { return this._puzzleTitle; }
+  set puzzleTitle(title:string) { 
+    this._puzzleTitle = title.trim().toUpperCase();
+  }
 
   constructor() { }
 
