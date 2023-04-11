@@ -6,6 +6,7 @@ import { GamePuzzles } from '../game-puzzles';
 import { SettingsService } from '../settings.service';
 import { PuzzleBoardComponent } from '../puzzle-board/puzzle-board.component';
 import { Puzzle } from '../puzzle';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-set-puzzles',
@@ -13,7 +14,7 @@ import { Puzzle } from '../puzzle';
   templateUrl: './set-puzzles.component.html',
   styleUrls: ['./set-puzzles.component.css'],
   providers: [SettingsService],
-  imports: [NgFor,NgClass,PuzzleBoardComponent]
+  imports: [NgFor,NgClass,PuzzleBoardComponent, FormsModule]
 })
 
 export class SetPuzzlesComponent implements OnInit {

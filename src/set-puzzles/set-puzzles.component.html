@@ -4,7 +4,9 @@
   <input class="puzzle-title" id="puzzleTitle" #puzzleTitle type="text" (keyup)="onTitleKey(puzzleTitle.value)" value="{{CurrentPuzzle.Title}}">
   <br>
   <label for="puzzleText">Puzzle: </label>
-  <input class="puzzle-text" id="puzzleText" #puzzleText type="text" (keyup)="onTextKey(puzzleText.value)" value="{{CurrentPuzzle.Text}}">
+  <input class="puzzle-text" id="puzzleText" #puzzleText type="text" required [maxLength]="maxPuzzleLength" (keyup)="onTextKey(puzzleText.value)" value="{{CurrentPuzzle.Text}}">
+  <span>{{puzzleText.value.length}} of {{maxPuzzleLength}}</span>
+  
   <br>
   <br>
   <button class="button" (click)="updateGrid()">Refresh</button>
