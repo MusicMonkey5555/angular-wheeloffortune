@@ -56,7 +56,9 @@ export class App {
   editSetting:string = "settings";
 
   constructor(private score: ScoreService, private settings: SettingsService){
-    this.addPuzzle("90's", "Puzzle text");
+    this.addPuzzle("90's", "Boom Box");
+    this.addPuzzle("Video Games", "Mine Craft");
+    console.log(this.GamePuzzles)
     this.addPlayer("Nathan Bowhay");
     /*
     this.startGame();

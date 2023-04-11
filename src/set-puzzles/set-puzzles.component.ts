@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { NgClass, NgFor } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { PuzzleGrid } from '../puzzle-grid';
 import { PuzzleLetter } from '../puzzle-letter';
@@ -13,11 +13,14 @@ import { Puzzle } from '../puzzle';
   templateUrl: './set-puzzles.component.html',
   styleUrls: ['./set-puzzles.component.css'],
   providers: [SettingsService],
-  imports: [NgFor,PuzzleBoardComponent]
+  imports: [NgFor,NgClass,PuzzleBoardComponent]
 })
+
 export class SetPuzzlesComponent implements OnInit {
   private _puzzles: GamePuzzles;
   private puzzleGrid:PuzzleGrid;
+
+  public PuzzleTypeNames:any = {normal: "Normal", tossUp: "Toss Up", bonus: "Bonus"};
 
   @Input()
   get puzzles():GamePuzzles { return this._puzzles; };
@@ -38,8 +41,6 @@ export class SetPuzzlesComponent implements OnInit {
     this.currentPuzzleIndex = 0;
     this.puzzleType = "normal";
     this._puzzles = puzzles;
-    this.CurrentPuzzle;
-    this.updateGrid();
   }
   @Input() maxPuzzleLength: number;
   @Input() gridLength: number[];
@@ -50,6 +51,14 @@ export class SetPuzzlesComponent implements OnInit {
 
   get CurrentPuzzle():Puzzle{
     return this._puzzles[this.puzzleType][this.currentPuzzleIndex];
+  }
+
+  public hasIssue(type:string):boolean {
+    return type ? 
+      this._puzzles.normal.some((p) => p.Text.trim() === '' || p.Title.trim() === '') || 
+      this._puzzles.tossUp.some((p) => p.Text.trim() === '' || p.Title.trim() === '') || 
+      this._puzzles.bonus.some((p) => p.Text.trim() === '' || p.Title.trim() === '') : 
+      this._puzzles[type].some((p:Puzzle) => p.Text.trim() === '' || p.Title.trim() === '');
   }
 
   public saveChanges(){
@@ -88,6 +97,7 @@ export class SetPuzzlesComponent implements OnInit {
   constructor(private settings: SettingsService) {}
 
   ngOnInit() {
+    this.updateGrid();
   }
 
   public onTitleKey(title: string){

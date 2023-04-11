@@ -1,5 +1,5 @@
 <div class="form-group">
-  <h2>{{PuzzleType}}</h2>
+  <h2>{{PuzzleTypeNames[PuzzleType]}}</h2>
   <label for="puzzleTitle">Title (Category): </label>
   <input class="puzzle-title" id="puzzleTitle" #puzzleTitle type="text" (keyup)="onTitleKey(puzzleTitle.value)" value="{{CurrentPuzzle.Title}}">
   <br>
@@ -10,10 +10,10 @@
   <button class="button" (click)="updateGrid()">Refresh</button>
   <app-puzzle-board ngIf="PuzzleGrid" [puzzle]="PuzzleGrid" [title]="CurrentPuzzle.Title"></app-puzzle-board>
   <div>
-    <button *ngFor="let puzzle of puzzles[PuzzleType]; index as i" (click)="updateCurrentPuzzle(i)">{{i+1}}</button>
+    <button *ngFor="let puzzle of puzzles[PuzzleType]; index as i" [ngClass]="puzzle.Text.trim() === '' || puzzle.Title.trim() === '' ? 'warn' : ''" (click)="updateCurrentPuzzle(i)">{{i+1}}</button>
   </div>
-  <button (click)="PuzzleType='normal'">Normal</button>
-  <button (click)="PuzzleType='tossUp'">Toss-Up</button>
-  <button (click)="PuzzleType='bonus'">Bonus</button>
+  <button [ngClass]="hasIssue('normal') ? 'warn' : ''" (click)="PuzzleType='normal'">Normal</button>
+  <button [ngClass]="hasIssue('tossUp') ? 'warn' : ''" (click)="PuzzleType='tossUp'">Toss-Up</button>
+  <button [ngClass]="hasIssue('bonus') ? 'warn' : ''" (click)="PuzzleType='bonus'">Bonus</button>
   <button class="button green" (click)="saveChanges()">Save</button>
 </div>
