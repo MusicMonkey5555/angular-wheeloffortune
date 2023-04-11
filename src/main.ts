@@ -74,10 +74,6 @@ export class App {
 
     this.startGame();
     this.guessLetter('b', 100);
-    /*
-    this.startGame();
-    this.guessLetter('z', 100);
-    */
   }
 
   private getCurrentPuzzle():Puzzle{
