@@ -15,6 +15,9 @@ export class PuzzleLetter {
   get Letter(): string {
     return this.visible ? this.letter : ' ';
   }
+  get hasLetter():boolean {
+    return this.letter.trim() !== '';
+  }
   public peak(): string {
     return this.letter;
   }

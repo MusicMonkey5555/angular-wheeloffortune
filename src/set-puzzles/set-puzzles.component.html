@@ -1,0 +1,18 @@
+<div class="form-group">
+  <h2>{{PuzzleType}}</h2>
+  <label for="puzzleTitle">Title (Category): </label>
+  <input class="puzzle-title" id="puzzleTitle" #puzzleTitle type="text" (keyup)="onTitleKey(puzzleTitle.value)" value="{{CurrentPuzzle.Title}}">
+  <br>
+  <label for="puzzleText">Puzzle: </label>
+  <input class="puzzle-text" id="puzzleText" #puzzleText type="text" (keyup)="onTextKey(puzzleText.value)" value="{{CurrentPuzzle.Text}}">
+  <br>
+  <br>
+  <button class="button" (click)="updateGrid()">Preview</button>
+  <app-puzzle-board ngIf="PuzzleGrid" [puzzle]="PuzzleGrid" [title]="CurrentPuzzle.Title"></app-puzzle-board>
+  <div>
+    <button *ngFor="let puzzle of puzzles[PuzzleType]; index as i" (click)="updateCurrentPuzzle(i)">Normal</button>
+  </div>
+  <button (click)="PuzzleType='normal'">Normal</button>
+  <button (click)="PuzzleType='tossUp'">Toss-Up</button>
+  <button (click)="PuzzleType='bonus'">Bonus</button>
+</div>

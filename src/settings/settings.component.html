@@ -1,16 +1,23 @@
-<h2>Settings</h2>
-<form (ngSubmit)="onSubmit($event)">
-<label>Game Time (min): </label>
-<input type="number" value="{{Setttings.TotalGameTimeSeconds/60}}">
-<br>
-<label>Bonus Solve Time (sec): </label>
-<input type="number" value="{{Setttings.BonusSolveTimeSeconds}}">
-<br>
-<label>Tripple Toss Up: </label>
-<input type="checkbox" value="{{Setttings.TrippleTossUp}}">
-<br>
-<label>Max Players: </label>
-<input type="number" value="{{Setttings.MaxPlayerCount}}">
-<br>
-<button>Save</button>
-</form>
+<div class="form-group">
+  <form (ngSubmit)="onSubmit()" [formGroup]="saveSettingsForm">
+    <label for="maxPlayers">Max Players: </label>
+    <input id="maxPlayers" type="number" formControlName="maxPlayers">
+    <label for="gameTime">Game Time (min): </label>
+    <input id="gameTime" type="number" formControlName="gameTime">
+    <label for="bonusTime">Bonus Solve Time (sec): </label>
+    <input id="bonusTime" type="number" formControlName="bonusTime">
+    <div class="switch-label-group">
+      <div>Tripple Toss Up:</div>
+      <label for="trippleTossUp" class="switch">
+        <input id="trippleTossUp" type="checkbox" formControlName="trippleTossUp">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <label for="roundCount">Rounds: </label>
+    <input id="roundCount" type="number" formControlName="roundCount">
+    <label for="bonusPuzzleCount">Bonus Puzzles: </label>
+    <input id="bonusPuzzleCount" type="number" formControlName="bonusPuzzleCount">
+    <button class="button" type="button" (click)="onReset()">Reset</button>
+    <button class="button green" type="submit">Save</button>
+  </form>
+</div>

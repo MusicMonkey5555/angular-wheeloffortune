@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgForOf } from '@angular/common';
+import { NgClass, NgFor } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { PuzzleLetter } from '../puzzle-letter';
 
