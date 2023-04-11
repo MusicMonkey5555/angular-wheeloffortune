@@ -1,2 +1,3 @@
-<h1>Wheel Of Fortune</h1>
+<h1 style='text-align:center'>Wheel Of Fortune</h1>
 <app-puzzle-board [puzzle]="PuzzleGrid" [title]="PuzzleTitle"></app-puzzle-board>
+<h2 *ngFor="let player of Players">{{player.Name}}: {{player.Score}}</h2>

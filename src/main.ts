@@ -17,34 +17,17 @@ import { SettingsComponent } from './settings/settings.component';
   imports: [CommonModule, PuzzleBoardComponent, SettingsComponent],
   providers: [ScoreService, SettingsService],
   templateUrl: './main.html',
-  /*
-  template: `
-    <h1>Wheel Of Fortune</h1>
-    <puzzel
-    <table>
-        <tr *ngFor="let row in puzzle">
-          <td *ngFor="let l in row">
-          {{l.get()}}
-          </td>
-        </tr>
-    </table>
-    <h1>Hello from {{name}}!</h1>
-    <a target="_blank" href="https://angular.io/start">
-      Learn more about Angular 
-    </a>
-  `,
-  */
 })
 
 export class App {
   name = 'Wheel Of Fortune';
   private readonly vowels: string[] = ['a', 'e', 'i', 'o', 'u'];
   private readonly bonusRoundLetters: string[] = ['r', 's', 't', 'l', 'n', 'e'];
-  private puzzles: Puzzle[];
-  private puzzleIndex: number = 0;
-  private bonusPuzzle: Puzzle[];
+  private puzzles: Puzzle[] = [];
+  private puzzleIndex: number = -1;
+  private bonusPuzzle: Puzzle[] = [];
   private bonusPuzzleIndex: number = -1;
-  private tossUpPuzzle:Puzzle[];
+  private tossUpPuzzle:Puzzle[] = [];
   private tossUpPuzzelIndex:number = -1;
 
   ///Keep track of total game time
@@ -63,11 +46,27 @@ export class App {
   private noMoreVowels:boolean = false;
   get NoMoreVowels(): boolean { return this.noMoreVowels; }
   get PuzzleTitle():string { return this.mode == GameMode.Regular ? this.puzzles[this.puzzleIndex].Title : "Test"; }
+  get Players() { return this.score.Players; }
 
-  constructor(private score: ScoreService, private settings: SettingsService){}
+  constructor(private score: ScoreService, private settings: SettingsService){
+    this.addPuzzle("90's", "Puzzle text");
+    this.addPlayer("Nathan Bowhay");
+    this.startGame();
+    this.guessLetter('z', 100);
+    console.log(this.puzzle);
+  }
+
+  private maxPuzzleLength():number {
+    return this.gridLength.reduce((count, v) => count + v, 0);
+  }
+
+  private isPuzzelLengthOk(puzzle:string):boolean {
+    let maxLength = this.maxPuzzleLength();
+    return puzzle.length <= maxLength;
+  }
 
   public addPlayer(name: string): boolean {
-    if (this.mode == GameMode.Setup && this.score.count() < this.settings.getSettings().MaxPlayerCount) {
+    if (this.mode == GameMode.Setup && this.Players.length < this.settings.Settings.MaxPlayerCount) {
       return this.score.addPlayer(name);
     } else {
       return false;
@@ -76,14 +75,14 @@ export class App {
 
   public addBonusPuzzle(title: string, text:string):boolean{
     if (this.mode == GameMode.Setup) {
-      if (
+      if ( this.isPuzzelLengthOk(text) && 
         !this.bonusPuzzle.some(
           (p) => p.Title.trim().toUpperCase() === title.trim().toUpperCase()
         ) &&
-        this.bonusPuzzle.length < this.settings.getSettings().BonusPuzzelCount
+        this.bonusPuzzle.length < this.settings.Settings.BonusPuzzelCount
       ) {
         this.bonusPuzzle.push({ Title: title, Text: text });
-          return true;
+        return true;
       } else {
         return false;
       }
@@ -94,7 +93,7 @@ export class App {
 
   public addTossUpPuzzle(title: string, text: string): boolean {
     if (this.mode == GameMode.Setup) {
-      if (this.tossUpPuzzle.length < this.settings.getTossUpCount()) {
+      if (this.isPuzzelLengthOk(text) && this.tossUpPuzzle.length < this.settings.TossUpCount) {
         this.tossUpPuzzle.push({ Title: title, Text: text });
         return true;
       } else {
@@ -107,7 +106,7 @@ export class App {
 
   public addPuzzle(title: string, text: string): boolean {
     if (this.mode == GameMode.Setup) {
-      if (this.puzzles.length < this.settings.getSettings().NumberOfRounds) {
+      if (this.isPuzzelLengthOk(text) && this.puzzles.length < this.settings.Settings.NumberOfRounds) {
         this.puzzles.push({ Title: title, Text: text });
         return true;
       } else {
@@ -121,9 +120,10 @@ export class App {
   public startGame(): boolean {
     if (this.mode == GameMode.Setup) {
       this.mode = GameMode.Regular;
+      this.nextPuzzle();
       this.gameTimer = new Timer(() => {
         this.mode = GameMode.Train;
-      }, this.settings.getSettings().TotalGameTimeSeconds);
+      }, this.settings.Settings.TotalGameTimeSeconds);
       return true;
     } else {
       return false;
@@ -193,6 +193,14 @@ export class App {
   }
 
   public guessLetter(letter: string, points: number): boolean {
+    //Check for bad letter
+    if(letter.trim().length > 1 || letter.length < 0){
+      return false;
+    }
+    //Clean up since Wheel is case sensative
+    letter = letter.trim().toUpperCase();
+
+    //Check if the letter was guessed already
     let wasGuessed = this.lettersGuessed.includes(letter);
 
     if (this.vowels.includes(letter)) {
@@ -222,63 +230,88 @@ export class App {
     }
   }
 
-  //set the pizzel from string
+  //set the puzzle from string
   public setPuzzle(puzzleText: string) {
-    puzzleText = puzzleText.trim();
+    //Clean the text
+    puzzleText = puzzleText.trim().toUpperCase();
+
+    //Clear out the puzzle
+    this.puzzle = [];
+
+    //Set the start of our rows
     let row: number = 0;
-    if (puzzleText.length <= 14) {
+
+    //Check if we only take up the middle
+    if (puzzleText.length <= this.gridLength.reduce((count, v, i, a) => i == 0 || i == a.length - 1 ? count + 0 : count + v, 0)) {
       this.puzzle[row] = Array.from(
-        { length: 12 },
+        { length: this.gridLength[row] },
         (v, i) => new PuzzleLetter(' ')
       );
       row++;
-      let words: string[] = puzzleText.split(' ');
-      let lineText: PuzzleLetter[];
-      words.forEach((word, i) => {
-        if (lineText.length + word.length <= this.gridLength[row]) {
-          if (lineText.length > 0) {
-            lineText.push(new PuzzleLetter(' '));
-          }
-        } else {
-          let extra: number = this.gridLength[row] - lineText.length;
-          if (extra > 0) {
-            for (let e = 0; e < extra; e++) {
-              if (e % 2 == 0) {
-                lineText.unshift(new PuzzleLetter(' '));
-              } else {
-                lineText.push(new PuzzleLetter(' '));
-              }
+    }
+
+    //Get all the words of the puzzle so we can center them
+    let words: string[] = puzzleText.split(/(\s+)/).filter(w => w.trim().length > 0);
+
+    //Loop through each word adding it to the row and moveing to the next row based on what fits
+    let lineText: PuzzleLetter[] = [];
+    words.forEach((word, i) => {
+      //Check if this word will fit on this line
+      if (lineText.length + word.length <= this.gridLength[row]) {
+        //If we added something to this line then add a space between words
+        if (lineText.length > 0) {
+          lineText.push(new PuzzleLetter(' '));
+        }
+      } else {
+        //Pad to center text
+        let extra: number = this.gridLength[row] - lineText.length;
+        if (extra > 0) {
+          for (let e = 0; e < extra; e++) {
+            if (e % 2 == 0) {
+              lineText.unshift(new PuzzleLetter(' '));
+            } else {
+              lineText.push(new PuzzleLetter(' '));
             }
           }
-          this.puzzle.push(lineText);
-          lineText = [];
         }
-        let temp: PuzzleLetter[] = Array.from(
-          word,
-          (c, k) => new PuzzleLetter(c)
-        );
-        lineText = lineText.concat(temp);
-      });
-      let extra: number = this.gridLength[row] - lineText.length;
-      if (extra > 0) {
-        for (let i = 0; i < extra; i++) {
-          if (i % 2 == 0) {
-            lineText.unshift(new PuzzleLetter(' '));
-          } else {
-            lineText.push(new PuzzleLetter(' '));
-          }
+        //Add the line to our puzzle and move to fill out next line
+        this.puzzle.push(lineText);
+        lineText = [];
+        row++;
+      }
+
+      //Add each character from the word to our line grid
+      let temp: PuzzleLetter[] = Array.from(
+        word,
+        (c, k) => new PuzzleLetter(c)
+      );
+      lineText = lineText.concat(temp);
+    });
+
+    //Pad to center text we had left
+    let extra: number = this.gridLength[row] - lineText.length;
+    if (extra > 0) {
+      for (let i = 0; i < extra; i++) {
+        if (i % 2 == 0) {
+          lineText.unshift(new PuzzleLetter(' '));
+        } else {
+          lineText.push(new PuzzleLetter(' '));
         }
       }
-      this.puzzle.push(lineText);
-      //add extra lines for board
-      for (let i = row; i < this.gridLength.length; i++) {
-        this.puzzle.push(
-          Array.from(
-            { length: this.gridLength[i] },
-            (v, n) => new PuzzleLetter(' ')
-          )
-        );
-      }
+    }
+
+    //Add whatever we had left to our puzzle
+    this.puzzle.push(lineText);
+    row++;
+
+    //add extra lines for board if we didn't fill it up
+    for (let i = row; i < this.gridLength.length; i++) {
+      this.puzzle.push(
+        Array.from(
+          { length: this.gridLength[i] },
+          (v, n) => new PuzzleLetter(' ')
+        )
+      );
     }
   }
   // Loop through each row and letter revealing and counting how many are revealed

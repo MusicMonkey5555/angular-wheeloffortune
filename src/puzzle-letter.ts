@@ -1,7 +1,7 @@
 export class PuzzleLetter {
   private letter: string = ' ';
   private visible: boolean = false;
-  
+
   constructor(l: string) {
     this.letter = l.trim();
     if (this.letter.length == 0) {
@@ -26,7 +26,7 @@ export class PuzzleLetter {
       throw Error('Invalid length');
     }
 
-    return this.letter === l;
+    return this.letter.trim().toUpperCase() === l.trim().toUpperCase();
   }
   public reveal(l: string): boolean {
     if (this.isLetter(l)) {

@@ -5,13 +5,15 @@ import { Settings } from './settings';
 export class SettingsService {
   private settings:Settings;
 
-  constructor() { }
+  constructor() {
+    this.settings = new Settings();
+   }
 
-  getSettings(){
+  get Settings(){
     return this.settings;
   }
 
-  getTossUpCount():number {
+  get TossUpCount():number {
     return this.settings.NumberOfRounds * (this.settings.TrippleTossUp ? 3 : 1);
   }
 }
