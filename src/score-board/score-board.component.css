@@ -1,0 +1,15 @@
+.container {
+  display:flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-flow: row wrap;
+  row-gap: 10px;
+}
+
+.item {
+  align-self: stretch;
+  display: flex;
+  flex-flow: row wrap;
+  align-content: stretch;
+  align-items: stretch;
+}

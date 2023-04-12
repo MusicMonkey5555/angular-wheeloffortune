@@ -3,11 +3,17 @@ import { Player } from './player';
 
 @Injectable()
 export class ScoreService {
+  private readonly colors:string[] = ['firebrick', 'gold', 'navy', 'purple', 'green'];
   private players: Player[] = [];
   private currentPlayerIndex: number = 0;
   private readonly vowelCost: number = 250;
 
   constructor(){}
+
+  getRandomColor() {
+    var color = Math.floor(0x1000000 * Math.random()).toString(16);
+    return '#' + ('000000' + color).slice(-6);
+  }
 
   public addPlayer(fullname: string): boolean {
     if (
@@ -16,7 +22,8 @@ export class ScoreService {
           player.Name.trim().toUpperCase() === fullname.trim().toUpperCase()
       )
     ) {
-      let p = new Player(fullname);
+      let color: string = this.players.length < this.colors.length ? this.colors[this.players.length] : this.getRandomColor();
+      let p = new Player(fullname, color);
       this.players.push(p);
       return true;
     } else {

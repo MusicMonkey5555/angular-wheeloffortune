@@ -1,15 +1,18 @@
 export class Player {
   private name: string = '';
+  private color: string = '';
   private score: number = 0;
   private totalScore: number = 0;
   private roundScore: number[];
   get Name() { return this.name; }
+  get Color() { return this.color; }
   get Score() { return this.score; }
   get TotalScore() { return this.totalScore; }
   get Rounds(): number[] { return this.roundScore.map(v => v); }
 
-  constructor(name: string){
+  constructor(name: string, color:string){
     this.name = name;
+    this.color = color;
   }
 
   public updateTotal() {

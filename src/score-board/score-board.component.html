@@ -1,0 +1,9 @@
+<div class="container">
+  <app-player-score
+    class="item"
+    *ngFor="let player of players; index as i"
+    [player]="player"
+    [displayRound]="displayRound"
+    [isPlayersTurn]="i == CurrentPlayerIndex"
+  ></app-player-score>
+</div>

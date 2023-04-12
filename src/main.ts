@@ -14,11 +14,12 @@ import { GamePuzzles } from './game-puzzles';
 import { SetPuzzlesComponent } from './set-puzzles/set-puzzles.component';
 import { PuzzleGrid } from './puzzle-grid';
 import { Settings } from './settings';
+import { ScoreBoardComponent } from './score-board/score-board.component';
 
 @Component({
   selector: 'wof-app',
   standalone: true,
-  imports: [CommonModule, PuzzleBoardComponent, SettingsComponent, SetPuzzlesComponent],
+  imports: [CommonModule, PuzzleBoardComponent, SettingsComponent, SetPuzzlesComponent,ScoreBoardComponent],
   providers: [ScoreService, SettingsService],
   templateUrl: './main.html',
 })
@@ -71,9 +72,10 @@ export class App {
 
     this.addPlayer("Nathan Bowhay");
     this.addPlayer("Monroe");
+    this.addPlayer("Kelsey");
 
     this.startGame();
-    this.guessLetter('b', 100);
+    this.guessLetter('b', 1000);
   }
 
   private getCurrentPuzzle():Puzzle{

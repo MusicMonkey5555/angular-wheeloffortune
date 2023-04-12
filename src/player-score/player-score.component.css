@@ -1,0 +1,59 @@
+.score-group {
+  width: 200px;
+  height: 100%;
+  display: flex;
+  align-self: stretch;
+  flex-flow: row wrap;
+  align-content: stretch;
+  align-items: stretch;
+  flex-grow: 1;
+}
+
+.turn-bar {
+  display: flex;
+  height: 5px;
+  width: 200px;
+  background-color: blue;
+  flex-grow: 0;
+  order: 0;
+}
+
+.players-turn {
+  background: radial-gradient(circle, rgba(255,255,255,1) 40%, rgba(0,0,255,1) 100%);
+  background-position: top;
+  background-size: 5px 5px;
+  background-repeat: repeat-x;
+}
+
+.box {
+  width: 200px;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-self: stretch;
+  align-items: stretch;
+  border: 1px solid black;
+  flex-grow: 1;
+  order: 1;
+}
+
+.player-name {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: xx-large;
+  display: flex;
+  text-align: center;
+  align-self: center;
+  flex-grow: 1;
+  order: 0;
+}
+
+.player-score {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: xx-large;
+  color: whitesmoke;
+  text-shadow: 2px 4px 6px #000000;
+  text-align: center;
+  align-self: stretch;
+  flex-grow: 0;
+  order: 1;
+}

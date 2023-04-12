@@ -1,0 +1,7 @@
+<div class="score-group" >
+  <div class="turn-bar" [ngClass]="{'players-turn': isPlayersTurn}"></div>
+  <div class="box">
+    <div class="player-name" >{{player.Name}}</div>
+    <div class="player-score" [ngStyle]="{'background-color': player.Color}">${{displayRound ? Score : TotalScore}}</div>
+  </div>
+</div>

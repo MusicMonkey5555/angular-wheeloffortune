@@ -4,11 +4,9 @@
   [puzzle]="PuzzleGrid.Puzzle"
   [title]="PuzzleTitle"
 ></app-puzzle-board>
-<h2 [hidden]="Mode === 0" *ngFor="let player of Players">
-  {{player.Name}}: {{player.Score}}
-</h2>
+<br>
+<app-score-board [hidden]="Mode === 0" [players]="Players"></app-score-board>
 <button [hidden]="Mode == 0">Restart Game</button>
-
 <button
   [hidden]="Mode !== 0"
   [ngClass]="editSetting === 'settings' ? 'toggle-tab-on' : 'toggle-tab-off'"
