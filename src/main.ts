@@ -40,6 +40,9 @@ export class App {
   private gameTimer: Timer;
   private roundTimer: CountDownTimer;
   public roundSecondsLeft:number;
+  get FormatedRoundSeconds():string { 
+    return `${Math.round(this.roundSecondsLeft/60).toString().padStart(2,'0')}:${(this.roundSecondsLeft % 60).toString().padStart(2,'0')}`; 
+  }
   get RoundTimer() { return this.roundTimer;}
 
   //Letter grid
@@ -88,11 +91,12 @@ export class App {
     this.addPlayer("Nathan Bowhay");
     this.addPlayer("Monroe");
     this.addPlayer("Kelsey");
-
+    /*
     this.startGame();
     this.onEnterPoints('200');
     this.onLetterGuess('b');
     this.onVowelGuess('o');
+    */
   }
 
   public onEnterPoints(points:string){

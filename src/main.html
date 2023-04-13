@@ -48,7 +48,7 @@
   (keyup)="onPuzzleGuessLetter(guessPuzzle.value)"
 />
 
-<div *ngIf="RoundTimer" class="timer-bar" [ngStyle]="{'width.%': (roundSecondsLeft/RoundTimer.TotalTime) * 100}">{{roundSecondsLeft}}</div>
+<div *ngIf="RoundTimer" class="timer-bar" [ngStyle]="{'width.%': (roundSecondsLeft/RoundTimer.TotalTime) * 100}">{{FormatedRoundSeconds}}</div>
 <button class="button red" *ngIf="RoundTimer && !RoundTimer.isPaused" (click)="RoundTimer.pause()">Pause</button>
 <button class="button green" *ngIf="RoundTimer && RoundTimer.isPaused" (click)="RoundTimer.resume()">Resume</button>
 <button
@@ -155,8 +155,11 @@
     <span>{{Players.length}} of {{Settings.MaxPlayerCount}}</span>
     <ul>
       <li *ngFor="let player of Players; index as i">
-        {{player.Name}}
-        <button (click)="removePlayer(i)">Remove</button>
+        <div class="player-choice-box">
+          <div class="player-choice-name">{{player.Name}}</div>
+          <div [ngStyle]="{'background-color': player.Color, 'padding': '10px'}"></div>
+          <button class="button-sm red" (click)="removePlayer(i)">x</button>
+        </div>
       </li>
     </ul>
   </div>

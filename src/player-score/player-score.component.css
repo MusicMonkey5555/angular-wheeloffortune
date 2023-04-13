@@ -33,6 +33,7 @@
   align-self: stretch;
   align-items: stretch;
   border: 1px solid black;
+  background-color: white;
   flex-grow: 1;
   order: 1;
 }
