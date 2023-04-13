@@ -16,7 +16,7 @@
             "outputPath": "dist/demo",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "assets": ["src/assets/fonts/SF Fortune Wheel.ttf"],
+            "assets": ["src/assets/fonts/SFFortuneWheel.ttf"],
             "styles": [
               "src/global_styles.css",
               "src/assets/fonts/customFonts.css"

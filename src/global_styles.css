@@ -1,7 +1,7 @@
 /* Add application styles & imports to this file! */
 
 .game-title {
-  font-family: WheelFontFamily;
+  font-family: 'WheelFontFamily';
   text-align: center;
 }
 
