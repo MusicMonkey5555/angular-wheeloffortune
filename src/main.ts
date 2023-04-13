@@ -16,6 +16,7 @@ import { PuzzleGrid } from './puzzle-grid';
 import { Settings } from './settings';
 import { ScoreBoardComponent } from './score-board/score-board.component';
 import { GameActions } from './game-actions.enum';
+import { CountDownTimer } from './count-down-timer';
 
 @Component({
   selector: 'wof-app',
@@ -37,7 +38,9 @@ export class App {
 
   ///Keep track of total game time
   private gameTimer: Timer;
-  private roundTimer: Timer;
+  private roundTimer: CountDownTimer;
+  public roundSecondsLeft:number;
+  get RoundTimer() { return this.roundTimer;}
 
   //Letter grid
   //12
@@ -58,11 +61,15 @@ export class App {
   get NoMoreVowels(): boolean { return this.noMoreVowels; }
   get PuzzleTitle():string { return this.getCurrentPuzzle().Title; }
   get Players() { return this.score.Players; }
+  get CanBuyVowel() { return this.score.canBuyVowel(); }
   get Settings() {return this.settings.Settings; }
   get Mode() { return this.mode; }
   editSetting:string = "settings";
   private puzzleGuess:string = "";
   private spinPoints:number = 0;
+  private revealedCount:number = 0;
+  get LetterCount(){ return this.revealedCount; }
+  get SpinPoints() { return this.spinPoints; }
 
   constructor(private score: ScoreService, private settings: SettingsService){
     this.addPuzzle("90's", "Boom Box");
@@ -83,6 +90,9 @@ export class App {
     this.addPlayer("Kelsey");
 
     this.startGame();
+    this.onEnterPoints('200');
+    this.onLetterGuess('b');
+    this.onVowelGuess('o');
   }
 
   public onEnterPoints(points:string){
@@ -90,7 +100,19 @@ export class App {
   }
 
   public onLetterGuess(letter:string){
-    this.guessLetter(letter.trim().toUpperCase(), 100);
+    letter = letter.trim().toUpperCase();
+    if(/[A-Z]{1}/.test(letter) && !this.vowels.includes(letter)){
+      this.guessLetter(letter.trim().toUpperCase(), this.spinPoints);
+    }
+  }
+
+  public onVowelGuess(letter:string){
+    letter = letter.trim().toUpperCase();
+    if(this.vowels.includes(letter)){
+      if(this.guessLetter(letter.trim().toUpperCase(), this.spinPoints)){
+        this.action = GameActions.None;
+      }
+    }
   }
 
   public onPuzzleGuessLetter(text:string){
@@ -109,12 +131,20 @@ export class App {
     this.action = GameActions.Spin;
   }
 
+  public chooseBuyVowel(){
+    this.action = GameActions.BuyVowel;
+  }
+
   public chooseGuessLetter() {
     this.action = GameActions.GuessLetter;
   }
 
   public chooseGuessPuzzle(){
     this.startGuessCountdown();
+  }
+
+  public chooseSkip(){
+    this.nextTurn();
   }
 
   private getCurrentPuzzle():Puzzle{
@@ -263,7 +293,11 @@ export class App {
   }
   protected nextTurn() {
     this.action = GameActions.None;
+    this.revealedCount = 0;
+    this.spinPoints = 0;
+    this.roundSecondsLeft = 0;
     this.puzzleGuess = "";
+    this.roundTimer = null;
     this.score.nextPlayer();
   }
 
@@ -295,6 +329,8 @@ export class App {
       this.setPuzzle(this.puzzles.normal[this.puzzleIndex].Text);
       this.action = GameActions.None;
       this.puzzleGuess = "";
+      this.spinPoints = 0;
+      this.revealedCount = 0;
       this.noMoreVowels = false;
       this.lettersGuessed = [];
       return true;
@@ -312,9 +348,13 @@ export class App {
   private startGuessCountdown() {
     this.action = GameActions.GuessPuzzle;
     if(this.settings.Settings.SolveTimeSeconds > 0){
-      this.roundTimer = new Timer(() => {
+      this.roundSecondsLeft = this.settings.Settings.SolveTimeSeconds;
+      this.roundTimer = new CountDownTimer(() => {
         this.nextTurn();
-      }, this.settings.Settings.SolveTimeSeconds * 1000);
+        this.roundTimer = null;
+      }, () => {
+        this.roundSecondsLeft = Math.round(this.roundTimer.RemainingTime);
+      }, this.settings.Settings.SolveTimeSeconds);
     }
   }
 
@@ -332,7 +372,7 @@ export class App {
     if (this.vowels.includes(letter)) {
       if (!wasGuessed && this.score.canBuyVowel()) {
         this.lettersGuessed.push(letter);
-        this.noMoreVowels = this.vowels.every((vowel) => this.lettersGuessed.includes(vowel));
+        this.noMoreVowels = this.vowels.filter((v) => this.getCurrentPuzzle().Text.includes(v)).every((vowel) => this.lettersGuessed.includes(vowel));
         let revealed = this.reveal(letter);
         return this.score.buyVowel(revealed);
       } else {
@@ -343,8 +383,8 @@ export class App {
         this.lettersGuessed.push(letter);
         let revealed = this.reveal(letter);
         if (revealed > 0) {
+          this.revealedCount = revealed;
           this.score.addScore(points, revealed);
-          this.startGuessCountdown();
           return true;
         } else {
           this.nextTurn();

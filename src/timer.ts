@@ -14,7 +14,7 @@ export class Timer {
   public getStart(): Date {
     return new Date(this.start);
   }
-  public getRemainingTime(): number {
+  get RemainingTime(): number {
     return this.isPaused()
       ? this.remaining
       : this.remaining - (Date.now() - this.start);

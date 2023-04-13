@@ -5,6 +5,7 @@
     <td class="hidden-cell" *ngFor="let n of [].constructor((maxCells - row.length)/2)"></td>
   </tr>
 </table>
+<div class="no-more-vowels" *ngIf="noMoreVowels">🚫 NO MORE VOWELS</div>
 <div class="puzzle-title">
   {{puzzleTitle}}
 </div>

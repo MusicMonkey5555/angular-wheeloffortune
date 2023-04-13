@@ -1,8 +1,11 @@
 <h1 class="game-title">{{name.toUpperCase()}}</h1>
+<div *ngIf="SpinPoints > 0 && LetterCount > 0" class="letter-found">${{SpinPoints.toLocaleString('en')}} * {{LetterCount}} = ${{(SpinPoints * LetterCount).toLocaleString('en')}}</div>
+<div></div>
 <app-puzzle-board
   *ngIf="Mode !== GameModes.Setup"
   [puzzle]="PuzzleGrid.Puzzle"
   [title]="PuzzleTitle"
+  [noMoreVowels]="NoMoreVowels"
 ></app-puzzle-board>
 <br />
 <app-score-board
@@ -11,15 +14,16 @@
 ></app-score-board>
 <br />
 
-<label [hidden]="Mode === GameModes.Setup || Action !== GameActions.GuessLetter">Guess Letter</label>
+<label *ngIf="Mode !== GameModes.Setup && Action === GameActions.GuessLetter && LetterCount === 0">Guess Letter</label>
 <input
   type="text"
-  *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessLetter"
+  *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessLetter && LetterCount === 0"
   maxlength="1"
   #guessLetter
   (keyup)="onLetterGuess(guessLetter.value)"
 />
-<label [hidden]="Mode === GameModes.Setup || Action !== GameActions.Spin">Points</label>
+
+<label *ngIf="Mode !== GameModes.Setup && Action === GameActions.Spin">Points</label>
 <input
   type="number"
   *ngIf="Mode !== GameModes.Setup && Action == GameActions.Spin"
@@ -27,13 +31,26 @@
   (keyup)="onEnterPoints(enterPoints.value)"
 />
 
-<label [hidden]="Mode === GameModes.Setup || Action !== GameActions.GuessLetter">Guess Puzzle</label>
+<label *ngIf="Mode !== GameModes.Setup && Action === GameActions.BuyVowel">Buy Vowel</label>
+<input
+  type="text"
+  *ngIf="Mode !== GameModes.Setup && Action == GameActions.BuyVowel"
+  maxlength="1"
+  #guessVowel
+  (keyup)="onVowelGuess(guessVowel.value)"
+/>
+
+<label *ngIf="Mode !== GameModes.Setup && Action === GameActions.GuessPuzzle">Guess Puzzle</label>
 <input
   type="text"
   *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessPuzzle"
   #guessPuzzle
   (keyup)="onPuzzleGuessLetter(guessPuzzle.value)"
 />
+
+<div *ngIf="RoundTimer" class="timer-bar" [ngStyle]="{'width.%': (roundSecondsLeft/RoundTimer.TotalTime) * 100}">{{roundSecondsLeft}}</div>
+<button class="button red" *ngIf="RoundTimer && !RoundTimer.isPaused" (click)="RoundTimer.pause()">Pause</button>
+<button class="button green" *ngIf="RoundTimer && RoundTimer.isPaused" (click)="RoundTimer.resume()">Resume</button>
 <button
   *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessPuzzle"
   class="button green"
@@ -42,19 +59,32 @@
   Submit
 </button>
 <button
-  [hidden]="Mode === GameModes.Setup || Action !== GameActions.None"
+  *ngIf="Mode !== GameModes.Setup && Action === GameActions.None && LetterCount === 0"
   class="button wheel"
   (click)="chooseSpin()"
 >
   Spin
 </button>
-
 <button
-  [hidden]="Mode === GameModes.Setup || Action !== GameActions.None"
+  *ngIf="Mode !== GameModes.Setup && !NoMoreVowels && CanBuyVowel && Action !== GameActions.BuyVowel && (Action === GameActions.None || LetterCount > 0)"
+  class="button green"
+  (click)="chooseBuyVowel()"
+>
+  Buy Vowel
+</button>
+<button
+  *ngIf="Mode !== GameModes.Setup && (Action === GameActions.None || (LetterCount > 0 && Action !== GameActions.GuessPuzzle))"
   class="button green"
   (click)="chooseGuessPuzzle()"
 >
   Guess Puzzle
+</button>
+<button
+  *ngIf="Mode !== GameModes.Setup && (LetterCount > 0)"
+  class="button green"
+  (click)="chooseSkip()"
+>
+  Skip
 </button>
 <button
   [hidden]="Mode === GameModes.Setup || Action !== GameActions.Spin"

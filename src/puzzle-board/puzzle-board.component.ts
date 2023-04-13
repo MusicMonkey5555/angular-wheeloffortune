@@ -1,11 +1,11 @@
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { PuzzleLetter } from '../puzzle-letter';
 
 @Component({
   selector: 'app-puzzle-board',
   standalone: true,
-  imports: [NgFor,NgClass],
+  imports: [NgFor,NgClass,NgIf],
   templateUrl: './puzzle-board.component.html',
   styleUrls: ['./puzzle-board.component.css']
 })
@@ -26,6 +26,7 @@ export class PuzzleBoardComponent implements OnInit {
   set puzzleTitle(title:string) { 
     this._puzzleTitle = title.trim().toUpperCase();
   }
+  @Input() noMoreVowels:boolean;
 
   constructor() { }
 

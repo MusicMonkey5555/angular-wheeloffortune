@@ -8,7 +8,7 @@
 
 .hidden-cell {
   border-style: hidden;
-  background-color: white;
+  background-color: skyblue;
 }
 
 /* Outline cells */
@@ -37,6 +37,11 @@ tr:first-child > .bg-white {
   border-top: 5px outset blue;
 }
 
+tr:last-child > .bg-green, 
+tr:last-child > .bg-white {
+  border-bottom: 5px outset blue;
+}
+
 .puzzle-table {
   border: 1px hidden blue;
   background-color: silver;
@@ -45,6 +50,7 @@ tr:first-child > .bg-white {
   height: auto;
   margin-left: auto;
   margin-right: auto;
+  border-radius: 75px;
 }
 td {
   border: 1px solid black;
@@ -55,6 +61,25 @@ td {
   font-size: xx-large;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
+
+.no-more-vowels {
+  width: 25%;
+  padding: 5px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: medium;
+  background-color: skyblue;
+  background: linear-gradient(0deg, skyblue 0%, rgba(0,65,255,1) 100%);
+  background-position: bottom 1%;
+  color: white;
+  text-shadow: -1px -1px 0 rgba(22, 0, 22, 0.836), 
+                1px -1px 0 rgba(22, 0, 22, 0.836), 
+                -1px 1px 0 rgba(22, 0, 22, 0.836), 
+                1px 1px 0 rgba(22, 0, 22, 0.836);
+}
+
 .puzzle-title {
   max-width:calc(75px*10);
   height: auto;
@@ -76,7 +101,7 @@ td {
 @media(max-width: 1160px){
   td {
     width: 50px;
-    height: 50px;
+    height: 60px;
     font-size:xx-large;
   }
 
@@ -89,7 +114,7 @@ td {
 @media(max-width: 850px){
   td {
     width: 40px;
-    height: 40px;
+    height: 50px;
     font-size: x-large;
   }
 
@@ -102,7 +127,7 @@ td {
 @media(max-width: 780px){
   td {
     width: 30px;
-    height: 30px;
+    height: 40px;
     font-size: large;
   }
 
@@ -115,7 +140,7 @@ td {
 @media(max-width: 500px){
   td {
     width: 20px;
-    height: 20px;
+    height: 30px;
     font-size: medium;
   }
 
@@ -127,7 +152,7 @@ td {
 @media(max-width: 350px){
   td {
     width: 10px;
-    height: 10px;
+    height: 20px;
     font-size: small;
   }
 
