@@ -13,6 +13,7 @@ export class Player {
   constructor(name: string, color:string){
     this.name = name;
     this.color = color;
+    this.roundScore = [];
   }
 
   public updateTotal() {

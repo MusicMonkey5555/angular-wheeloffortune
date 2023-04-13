@@ -71,6 +71,7 @@ export class App {
   private puzzleGuess:string = "";
   private spinPoints:number = 0;
   private revealedCount:number = 0;
+  displayRoundScores:boolean = true;
   get LetterCount(){ return this.revealedCount; }
   get SpinPoints() { return this.spinPoints; }
 
@@ -319,7 +320,14 @@ export class App {
     let isSolved: boolean = this.checkPuzzle(guess);
     if (isSolved) {
       this.score.roundWon();
-      this.nextPuzzle();
+      this.roundTimer = null;
+      this.displayRoundScores = false;
+      this.action = GameActions.Solved;
+      this.puzzleGrid.ShowAll();
+      setTimeout(() => {
+        this.displayRoundScores = true;
+        this.nextPuzzle();
+      }, 1000 * this.Settings.BetweenRoundTimeSeconds);
       return true;
     } else {
       this.nextTurn();
@@ -337,6 +345,7 @@ export class App {
       this.revealedCount = 0;
       this.noMoreVowels = false;
       this.lettersGuessed = [];
+      this.roundTimer = null;
       return true;
     } else {
       return false;

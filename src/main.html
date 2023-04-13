@@ -11,6 +11,7 @@
 <app-score-board
   [hidden]="Mode === GameModes.Setup"
   [players]="Players"
+  [displayRound]="displayRoundScores"
 ></app-score-board>
 <br />
 
@@ -66,21 +67,21 @@
   Spin
 </button>
 <button
-  *ngIf="Mode !== GameModes.Setup && !NoMoreVowels && CanBuyVowel && Action !== GameActions.BuyVowel && (Action === GameActions.None || LetterCount > 0)"
+  *ngIf="Mode !== GameModes.Setup && !NoMoreVowels && CanBuyVowel && Action !== GameActions.BuyVowel && (Action === GameActions.None || (LetterCount > 0 && Action !== GameActions.GuessPuzzle))"
   class="button green"
   (click)="chooseBuyVowel()"
 >
   Buy Vowel
 </button>
 <button
-  *ngIf="Mode !== GameModes.Setup && (Action === GameActions.None || (LetterCount > 0 && Action !== GameActions.GuessPuzzle))"
+  *ngIf="Mode !== GameModes.Setup && Action !== GameActions.Solved && (Action === GameActions.None || (LetterCount > 0 && Action !== GameActions.GuessPuzzle))"
   class="button green"
   (click)="chooseGuessPuzzle()"
 >
   Guess Puzzle
 </button>
 <button
-  *ngIf="Mode !== GameModes.Setup && (LetterCount > 0)"
+  *ngIf="Mode !== GameModes.Setup && Action !== GameActions.Solved && (LetterCount > 0)"
   class="button green"
   (click)="chooseSkip()"
 >

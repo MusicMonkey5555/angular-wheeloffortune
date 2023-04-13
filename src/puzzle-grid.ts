@@ -5,7 +5,13 @@ export class PuzzleGrid {
   get Puzzle() { return this._puzzle; }
 
   public ShowAll(){
-    this._puzzle.forEach((row) => row.forEach((letter) => letter.reveal(letter.peak())));
+    this._puzzle.forEach((row) => 
+      row.forEach((letter) => { 
+        if(letter.hasLetter) {
+          letter.reveal(letter.peak());
+        }
+      })
+    );
   }
 
   constructor(puzzleText:string, gridLength:number[]){

@@ -4,6 +4,7 @@ export class Settings {
   public BonusPuzzleCount: number = 3;
   public MaxPlayerCount: number = 3;
   public SolveTimeSeconds: number = 3;
+  public BetweenRoundTimeSeconds: number = 5;
   public BonusSolveTimeSeconds: number = 10;
   public TrippleTossUp:boolean = false;
 }

@@ -3,5 +3,6 @@ export enum GameActions {
   Spin,
   BuyVowel,
   GuessLetter,
-  GuessPuzzle
+  GuessPuzzle,
+  Solved,
 }

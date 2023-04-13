@@ -21,6 +21,7 @@ export class SettingsComponent implements OnInit {
     maxPlayers: this.settings.Settings.MaxPlayerCount,
     gameTime: (this.settings.Settings.TotalGameTimeSeconds / 60),
     bonusTime: this.settings.Settings.BonusSolveTimeSeconds,
+    betweenTime: this.settings.Settings.BetweenRoundTimeSeconds,
     trippleTossUp: this.settings.Settings.TrippleTossUp,
     roundCount: this.settings.Settings.NumberOfRounds,
     bonusPuzzleCount: this.settings.Settings.BonusPuzzleCount
@@ -37,6 +38,7 @@ export class SettingsComponent implements OnInit {
     settings.MaxPlayerCount = controls.maxPlayers.value;
     settings.TotalGameTimeSeconds = controls.gameTime.value * 60;
     settings.BonusSolveTimeSeconds = controls.bonusTime.value;
+    settings.BetweenRoundTimeSeconds = controls.betweenTime.value;
     settings.TrippleTossUp = controls.trippleTossUp.value;
     settings.NumberOfRounds = controls.roundCount.value;
     settings.BonusPuzzleCount = controls.bonusPuzzleCount.value;
@@ -53,6 +55,7 @@ export class SettingsComponent implements OnInit {
       maxPlayers: this.settings.Settings.MaxPlayerCount,
       gameTime: (this.settings.Settings.TotalGameTimeSeconds / 60),
       bonusTime: this.settings.Settings.BonusSolveTimeSeconds,
+      betweenTime: this.settings.Settings.BetweenRoundTimeSeconds,
       trippleTossUp: this.settings.Settings.TrippleTossUp,
       roundCount: this.settings.Settings.NumberOfRounds,
       bonusPuzzleCount: this.settings.Settings.BonusPuzzleCount
