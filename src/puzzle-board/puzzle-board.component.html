@@ -1,7 +1,7 @@
 <table class="puzzle-table">
   <tr *ngFor="let row of letterGrid; index as i">
     <td class="hidden-cell" *ngFor="let n of [].constructor((maxCells - row.length)/2)"></td>
-    <td *ngFor="let letter of row" [ngClass]="letter.hasLetter ? 'bg-white' : 'bg-green' ">{{letter.Letter}}</td>
+    <td *ngFor="let letter of row" [ngClass]="{'bg-revealed':letter.isVisible, 'bg-white': letter.hasLetter,'bg-green': !letter.hasLetter}">{{letter.Letter}}</td>
     <td class="hidden-cell" *ngFor="let n of [].constructor((maxCells - row.length)/2)"></td>
   </tr>
 </table>

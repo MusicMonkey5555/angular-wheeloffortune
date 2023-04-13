@@ -5,6 +5,16 @@
 .bg-white {
   background-color: white;
 }
+@keyframes example {
+  0%   {background-color: blue; color: blue; transform: rotate3d(0, 1, 0, -360deg);}
+  100% {background-color: white; color: black; transform: rotate3d(0, 1, 0, 0deg)}
+}
+
+.bg-revealed {
+  background-color: white;
+  animation-name: example;
+  animation-duration: 4s;
+}
 
 .hidden-cell {
   border-style: hidden;
