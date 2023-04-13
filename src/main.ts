@@ -15,6 +15,7 @@ import { SetPuzzlesComponent } from './set-puzzles/set-puzzles.component';
 import { PuzzleGrid } from './puzzle-grid';
 import { Settings } from './settings';
 import { ScoreBoardComponent } from './score-board/score-board.component';
+import { GameActions } from './game-actions.enum';
 
 @Component({
   selector: 'wof-app',
@@ -36,6 +37,7 @@ export class App {
 
   ///Keep track of total game time
   private gameTimer: Timer;
+  private roundTimer: Timer;
 
   //Letter grid
   //12
@@ -47,6 +49,10 @@ export class App {
   private readonly gridLength: number[] = [12, 14, 14, 12];
   get GridLength():number[] { return this.gridLength; }
   private mode: GameMode = GameMode.Setup;
+  private action: GameActions = GameActions.None;
+  get Action() { return this.action; }
+  get GameActions() { return GameActions; }
+  get GameModes() {return GameMode; }
   private lettersGuessed: string[];
   private noMoreVowels:boolean = false;
   get NoMoreVowels(): boolean { return this.noMoreVowels; }
@@ -55,6 +61,8 @@ export class App {
   get Settings() {return this.settings.Settings; }
   get Mode() { return this.mode; }
   editSetting:string = "settings";
+  private puzzleGuess:string = "";
+  private spinPoints:number = 0;
 
   constructor(private score: ScoreService, private settings: SettingsService){
     this.addPuzzle("90's", "Boom Box");
@@ -75,23 +83,38 @@ export class App {
     this.addPlayer("Kelsey");
 
     this.startGame();
-    this.guessLetter('b', 1000);
+  }
+
+  public onEnterPoints(points:string){
+    this.spinPoints = Number(points);
   }
 
   public onLetterGuess(letter:string){
     this.guessLetter(letter.trim().toUpperCase(), 100);
   }
 
+  public onPuzzleGuessLetter(text:string){
+    this.puzzleGuess = text;
+  }
+
+  public onPuzzleGuess(){
+    this.guessPuzzle(this.puzzleGuess);
+  }
+
   public onBankrupt(){
     this.bankrupt();
   }
 
+  public chooseSpin(){
+    this.action = GameActions.Spin;
+  }
+
   public chooseGuessLetter() {
-    
+    this.action = GameActions.GuessLetter;
   }
 
   public chooseGuessPuzzle(){
-
+    this.startGuessCountdown();
   }
 
   private getCurrentPuzzle():Puzzle{
@@ -214,6 +237,7 @@ export class App {
   public startGame(): boolean {
     if (this.mode == GameMode.Setup && this.canStartGame()) {
       this.mode = GameMode.Regular;
+      this.action = GameActions.None;
       this.nextPuzzle();
       this.gameTimer = new Timer(() => {
         this.mode = GameMode.Train;
@@ -238,6 +262,8 @@ export class App {
     }
   }
   protected nextTurn() {
+    this.action = GameActions.None;
+    this.puzzleGuess = "";
     this.score.nextPlayer();
   }
 
@@ -267,6 +293,8 @@ export class App {
     if (this.puzzleIndex + 1 < this.puzzles.normal.length) {
       this.puzzleIndex++;
       this.setPuzzle(this.puzzles.normal[this.puzzleIndex].Text);
+      this.action = GameActions.None;
+      this.puzzleGuess = "";
       this.noMoreVowels = false;
       this.lettersGuessed = [];
       return true;
@@ -279,6 +307,15 @@ export class App {
     let currentPuzzle = this.getCurrentPuzzle();
 
     return currentPuzzle.Text.trim().toUpperCase() === guess.trim().toUpperCase();
+  }
+
+  private startGuessCountdown() {
+    this.action = GameActions.GuessPuzzle;
+    if(this.settings.Settings.SolveTimeSeconds > 0){
+      this.roundTimer = new Timer(() => {
+        this.nextTurn();
+      }, this.settings.Settings.SolveTimeSeconds * 1000);
+    }
   }
 
   public guessLetter(letter: string, points: number): boolean {
@@ -307,6 +344,7 @@ export class App {
         let revealed = this.reveal(letter);
         if (revealed > 0) {
           this.score.addScore(points, revealed);
+          this.startGuessCountdown();
           return true;
         } else {
           this.nextTurn();

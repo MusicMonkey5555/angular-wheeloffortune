@@ -1,37 +1,95 @@
 <h1 class="game-title">{{name.toUpperCase()}}</h1>
 <app-puzzle-board
-  *ngIf="Mode !== 0"
+  *ngIf="Mode !== GameModes.Setup"
   [puzzle]="PuzzleGrid.Puzzle"
   [title]="PuzzleTitle"
 ></app-puzzle-board>
-<br>
-<app-score-board [hidden]="Mode === 0" [players]="Players"></app-score-board>
-<br>
-<label>Guess Letter</label>
-<input type="text" maxlength="1" #guessLetter (keyup)="onLetterGuess(guessLetter.value)">
+<br />
+<app-score-board
+  [hidden]="Mode === GameModes.Setup"
+  [players]="Players"
+></app-score-board>
+<br />
 
-<button class="button green" (click)="chooseGuessPuzzle()">Guess Puzzle</button>
-<button class="button green" (click)="chooseGuessLetter()">Guess Letter</button>
-<button class="button" (click)="onBankrupt()">Bankrupt</button>
+<label [hidden]="Mode === GameModes.Setup || Action !== GameActions.GuessLetter">Guess Letter</label>
+<input
+  type="text"
+  *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessLetter"
+  maxlength="1"
+  #guessLetter
+  (keyup)="onLetterGuess(guessLetter.value)"
+/>
+<label [hidden]="Mode === GameModes.Setup || Action !== GameActions.GuessLetter">Points</label>
+<input
+  type="number"
+  *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessLetter"
+  #enterPoints
+  (keyup)="onEnterPoints(enterPoints.value)"
+/>
 
-
-<button [hidden]="Mode == 0">Restart Game</button>
+<label [hidden]="Mode === GameModes.Setup || Action !== GameActions.GuessLetter">Guess Puzzle</label>
+<input
+  type="text"
+  *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessPuzzle"
+  #guessPuzzle
+  (keyup)="onPuzzleGuessLetter(guessPuzzle.value)"
+/>
 <button
-  [hidden]="Mode !== 0"
+  *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessPuzzle"
+  class="button green"
+  (click)="onPuzzleGuess()"
+>
+  Submit
+</button>
+
+{{Action}}
+<button
+  [hidden]="Mode === GameModes.Setup || Action !== GameActions.None"
+  class="button wheel"
+  (click)="chooseSpin()"
+>
+  Spin
+</button>
+
+<button
+  [hidden]="Mode === GameModes.Setup || Action !== GameActions.None"
+  class="button green"
+  (click)="chooseGuessPuzzle()"
+>
+  Guess Puzzle
+</button>
+<button
+  [hidden]="Mode === GameModes.Setup || Action !== GameActions.Spin"
+  class="button green"
+  (click)="chooseGuessLetter()"
+>
+  Guess Letter
+</button>
+<button
+  [hidden]="Mode === GameModes.Setup || Action !== GameActions.Spin"
+  class="button"
+  (click)="onBankrupt()"
+>
+  Bankrupt
+</button>
+
+<button [hidden]="Mode == GameModes.Setup">Restart Game</button>
+<button
+  [hidden]="Mode !== GameModes.Setup"
   [ngClass]="editSetting === 'settings' ? 'toggle-tab-on' : 'toggle-tab-off'"
   (click)="editSetting = 'settings'"
 >
   Settings
 </button>
 <button
-  [hidden]="Mode !== 0"
+  [hidden]="Mode !== GameModes.Setup"
   [ngClass]="editSetting === 'puzzles' ? 'toggle-tab-on' : 'toggle-tab-off'"
   (click)="editSetting = 'puzzles'"
 >
   Set Puzzles
 </button>
 <button
-  [hidden]="Mode !== 0"
+  [hidden]="Mode !== GameModes.Setup"
   [ngClass]="editSetting === 'players' ? 'toggle-tab-on' : 'toggle-tab-off'"
   (click)="editSetting = 'players'"
 >
@@ -39,19 +97,33 @@
 </button>
 <div class="tab-box">
   <app-settings
-    *ngIf="(Mode === 0 && editSetting === 'settings')"
+    *ngIf="(Mode === GameModes.Setup && editSetting === 'settings')"
     (onSavedChanges)="onSettingsSaved($event)"
   ></app-settings>
   <app-set-puzzles
-    *ngIf="(Mode === 0 && editSetting === 'puzzles')"
+    *ngIf="(Mode === GameModes.Setup && editSetting === 'puzzles')"
     [puzzles]="GamePuzzles"
     [maxPuzzleLength]="maxPuzzleLength()"
     [gridLength]="GridLength"
     (onSavedChanges)="onPuzzlesSaved($event)"
   ></app-set-puzzles>
-  <div [hidden]="!(Mode === 0 && editSetting === 'players')" class="form-group">
-    <input [hidden]="Players.length >= Settings.MaxPlayerCount" #newPlayerName type="text" placeholder="Player Name">
-    <button class="button green" [hidden]="Players.length >= Settings.MaxPlayerCount" (click)="addPlayer(newPlayerName.value);newPlayerName.value = '';">Add Player</button>
+  <div
+    [hidden]="!(Mode === GameModes.Setup && editSetting === 'players')"
+    class="form-group"
+  >
+    <input
+      [hidden]="Players.length >= Settings.MaxPlayerCount"
+      #newPlayerName
+      type="text"
+      placeholder="Player Name"
+    />
+    <button
+      class="button green"
+      [hidden]="Players.length >= Settings.MaxPlayerCount"
+      (click)="addPlayer(newPlayerName.value);newPlayerName.value = '';"
+    >
+      Add Player
+    </button>
     <span>{{Players.length}} of {{Settings.MaxPlayerCount}}</span>
     <ul>
       <li *ngFor="let player of Players; index as i">
@@ -61,4 +133,10 @@
     </ul>
   </div>
 </div>
-<button *ngIf="Mode === 0 && Players.length > 1" class="button green" (click)="startGame()">Start Game</button>
+<button
+  *ngIf="Mode === GameModes.Setup && Players.length > 1"
+  class="button green"
+  (click)="startGame()"
+>
+  Start Game
+</button>
