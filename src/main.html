@@ -102,7 +102,9 @@
   Bankrupt
 </button>
 
-<button [hidden]="Mode == GameModes.Setup">Restart Game</button>
+<br>
+<button [hidden]="Mode == GameModes.Setup" (click)="restartGame()">Restart Game</button>
+
 <button
   [hidden]="Mode !== GameModes.Setup"
   [ngClass]="editSetting === 'settings' ? 'toggle-tab-on' : 'toggle-tab-off'"

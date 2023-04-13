@@ -266,7 +266,21 @@ export class App {
       return false;
     }
 
-    return true;;
+    return true;
+  }
+
+  public restartGame(){
+    this.gameTimer = null;
+    this.mode = GameMode.Setup;
+    this.action = GameActions.None;
+    this.revealedCount = 0;
+    this.spinPoints = 0;
+    this.roundSecondsLeft = 0;
+    this.puzzleGuess = "";
+    this.roundTimer = null;
+    this.noMoreVowels = false;
+    this.lettersGuessed = [];
+    this.puzzleIndex = 0;
   }
 
   public startGame(): boolean {
