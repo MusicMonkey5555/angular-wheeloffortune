@@ -3,17 +3,16 @@ import { Settings } from './settings';
 
 @Injectable()
 export class SettingsService {
-  private settings:Settings;
+  private static settings:Settings = new Settings();
 
   constructor() {
-    this.settings = new Settings();
    }
 
   get Settings(){
-    return this.settings;
+    return SettingsService.settings;
   }
 
   get TossUpCount():number {
-    return this.settings.NumberOfRounds * (this.settings.TrippleTossUp ? 3 : 1);
+    return SettingsService.settings.NumberOfRounds * (SettingsService.settings.TrippleTossUp ? 3 : 1);
   }
 }
