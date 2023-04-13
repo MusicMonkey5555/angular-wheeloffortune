@@ -19,10 +19,10 @@
   #guessLetter
   (keyup)="onLetterGuess(guessLetter.value)"
 />
-<label [hidden]="Mode === GameModes.Setup || Action !== GameActions.GuessLetter">Points</label>
+<label [hidden]="Mode === GameModes.Setup || Action !== GameActions.Spin">Points</label>
 <input
   type="number"
-  *ngIf="Mode !== GameModes.Setup && Action == GameActions.GuessLetter"
+  *ngIf="Mode !== GameModes.Setup && Action == GameActions.Spin"
   #enterPoints
   (keyup)="onEnterPoints(enterPoints.value)"
 />
@@ -41,8 +41,6 @@
 >
   Submit
 </button>
-
-{{Action}}
 <button
   [hidden]="Mode === GameModes.Setup || Action !== GameActions.None"
   class="button wheel"
