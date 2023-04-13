@@ -82,6 +82,18 @@ export class App {
     this.guessLetter(letter.trim().toUpperCase(), 100);
   }
 
+  public onBankrupt(){
+    this.bankrupt();
+  }
+
+  public chooseGuessLetter() {
+    
+  }
+
+  public chooseGuessPuzzle(){
+
+  }
+
   private getCurrentPuzzle():Puzzle{
     let puzzle:Puzzle = null;
     switch(this.mode){

@@ -9,6 +9,12 @@
 <br>
 <label>Guess Letter</label>
 <input type="text" maxlength="1" #guessLetter (keyup)="onLetterGuess(guessLetter.value)">
+
+<button class="button green" (click)="chooseGuessPuzzle()">Guess Puzzle</button>
+<button class="button green" (click)="chooseGuessLetter()">Guess Letter</button>
+<button class="button" (click)="onBankrupt()">Bankrupt</button>
+
+
 <button [hidden]="Mode == 0">Restart Game</button>
 <button
   [hidden]="Mode !== 0"
