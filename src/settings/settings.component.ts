@@ -20,6 +20,7 @@ export class SettingsComponent implements OnInit {
   saveSettingsForm = this.formBuilder.group({
     maxPlayers: this.settings.Settings.MaxPlayerCount,
     gameTime: (this.settings.Settings.TotalGameTimeSeconds / 60),
+    solveTime: this.settings.Settings.SolveTimeSeconds,
     bonusTime: this.settings.Settings.BonusSolveTimeSeconds,
     betweenTime: this.settings.Settings.BetweenRoundTimeSeconds,
     trippleTossUp: this.settings.Settings.TrippleTossUp,
@@ -37,6 +38,7 @@ export class SettingsComponent implements OnInit {
     //Update our settings
     settings.MaxPlayerCount = controls.maxPlayers.value;
     settings.TotalGameTimeSeconds = controls.gameTime.value * 60;
+    settings.SolveTimeSeconds = controls.solveTime.value;
     settings.BonusSolveTimeSeconds = controls.bonusTime.value;
     settings.BetweenRoundTimeSeconds = controls.betweenTime.value;
     settings.TrippleTossUp = controls.trippleTossUp.value;
@@ -54,6 +56,7 @@ export class SettingsComponent implements OnInit {
     this.saveSettingsForm.reset({
       maxPlayers: this.settings.Settings.MaxPlayerCount,
       gameTime: (this.settings.Settings.TotalGameTimeSeconds / 60),
+      solveTime: this.settings.Settings.SolveTimeSeconds,
       bonusTime: this.settings.Settings.BonusSolveTimeSeconds,
       betweenTime: this.settings.Settings.BetweenRoundTimeSeconds,
       trippleTossUp: this.settings.Settings.TrippleTossUp,
