@@ -78,6 +78,10 @@ export class App {
     this.guessLetter('b', 1000);
   }
 
+  public onLetterGuess(letter:string){
+    this.guessLetter(letter.trim().toUpperCase(), 100);
+  }
+
   private getCurrentPuzzle():Puzzle{
     let puzzle:Puzzle = null;
     switch(this.mode){

@@ -1,4 +1,4 @@
-<h1 class="game-title">{{name}}</h1>
+<h1 class="game-title">{{name.toUpperCase()}}</h1>
 <app-puzzle-board
   *ngIf="Mode !== 0"
   [puzzle]="PuzzleGrid.Puzzle"
@@ -6,6 +6,9 @@
 ></app-puzzle-board>
 <br>
 <app-score-board [hidden]="Mode === 0" [players]="Players"></app-score-board>
+<br>
+<label>Guess Letter</label>
+<input type="text" maxlength="1" #guessLetter (keyup)="onLetterGuess(guessLetter.value)">
 <button [hidden]="Mode == 0">Restart Game</button>
 <button
   [hidden]="Mode !== 0"
