@@ -82,6 +82,10 @@
 	left:50%;
 	transform: translateX(-50%);
 	color:#fff;
+  text-shadow: -1px -1px 0 rgba(22, 0, 22, 0.836), 
+                1px -1px 0 rgba(22, 0, 22, 0.836), 
+                -1px 1px 0 rgba(22, 0, 22, 0.836), 
+                1px 1px 0 rgba(22, 0, 22, 0.836);
 }
 
 .arrow::before{
