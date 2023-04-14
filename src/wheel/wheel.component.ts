@@ -41,26 +41,40 @@ export class WheelComponent implements OnInit {
   
   private wedges:WheelWedge[] = [...defaultWedges];
   rotationDeg:number = 0;
-  moveArrow:boolean = true;
+  moveArrow:boolean = false;
 
   get Wedges() { return this.wedges; }
 
   @Output() onWheelStopped = new EventEmitter<WheelWedge>();
 
-  constructor() { }
+  constructor() {
+    console.log(this.wedges.length)
+  }
 
   ngOnInit() {
   }
 
+  public isNumber(value:string){
+    return !Number.isNaN(Number(value));
+  }
+
+  public displayWedgeValue(wedge:WheelWedge):string{
+    if(Number.isNaN(Number(wedge.value))){
+      return wedge.value;
+    } else {
+      return "$"+wedge.value;
+    }
+  }
+
   public rotateFunction(){
-    var min = 0;
+    var min = 90;
     var max = 1000;
-    this.rotationDeg = Math.floor(Math.random() * (max - min)) + min;
+    this.rotationDeg = Math.floor(Math.random() * (max - min) + min);
 
     //animate arrow
-    this.moveArrow = false;
+    this.moveArrow = true;
     setTimeout(() => {
-      this.moveArrow = true;
+      this.moveArrow = false;
       this.onWheelStopped.emit(this.wedges[0]);
     }, 5000);
   }

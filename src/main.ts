@@ -94,6 +94,7 @@ export class App {
     this.addPlayer("Monroe");
     this.addPlayer("Kelsey");
     this.startGame();
+    this.chooseSpin();
     /*
     this.onEnterPoints('200');
     this.onLetterGuess('b');

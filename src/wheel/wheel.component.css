@@ -26,7 +26,7 @@
 
 .container div{
 	height:50%;
-	width:200px;
+	width:50px;
 	position: absolute;
 	clip-path: polygon(100% 0 , 50% 100% , 0 0 );
 	transform:translateX(-50%);
@@ -34,12 +34,27 @@
 	text-align:center;
 	display:flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	font-size:20px;
 	font-weight:bold;
 	font-family:sans-serif;
 	color:#fff;
-	left:135px;
+	left:210px;
+}
+
+.container > div.wedge:first-child{
+  left:50%;
+}
+
+.container .wedge {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: large;
+  padding-top: 10px;
+}
+
+.verticle {
+  text-orientation: upright;
+  writing-mode: vertical-lr;
 }
 
 .container .one{
@@ -75,6 +90,34 @@
 	transform: rotate(315deg);
 }
 
+@keyframes flick {
+	0%,
+	100% {
+		transform: translateX(0%);
+		transform-origin: 25% 100%;
+	}
+
+	15% {
+		transform: translateX(-30px) rotate(6deg);
+	}
+
+	30% {
+		transform: translateX(15px) rotate(-6deg);
+	}
+
+	45% {
+		transform: translateX(-15px) rotate(3.6deg);
+	}
+
+	60% {
+		transform: translateX(9px) rotate(-2.4deg);
+	}
+
+	75% {
+		transform: translateX(-6px) rotate(1.2deg);
+	}
+}
+
 .arrow{
   z-index: 10;
 	position: absolute;
@@ -86,6 +129,14 @@
                 1px -1px 0 rgba(22, 0, 22, 0.836), 
                 -1px 1px 0 rgba(22, 0, 22, 0.836), 
                 1px 1px 0 rgba(22, 0, 22, 0.836);
+}
+
+.flick-right {
+  animation: flick 5s ease 0s 1 normal forwards;
+}
+
+.flick-left {
+  animation: flick 5s ease 0s 1 normal backwards;
 }
 
 .arrow::before{
