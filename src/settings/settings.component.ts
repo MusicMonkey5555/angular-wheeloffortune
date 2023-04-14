@@ -24,6 +24,7 @@ export class SettingsComponent implements OnInit {
     bonusTime: this.settings.Settings.BonusSolveTimeSeconds,
     betweenTime: this.settings.Settings.BetweenRoundTimeSeconds,
     trippleTossUp: this.settings.Settings.TrippleTossUp,
+    virtualWheel: this.settings.Settings.UseVirtualWheel,
     roundCount: this.settings.Settings.NumberOfRounds,
     bonusPuzzleCount: this.settings.Settings.BonusPuzzleCount
   });
@@ -42,6 +43,7 @@ export class SettingsComponent implements OnInit {
     settings.BonusSolveTimeSeconds = controls.bonusTime.value;
     settings.BetweenRoundTimeSeconds = controls.betweenTime.value;
     settings.TrippleTossUp = controls.trippleTossUp.value;
+    settings.UseVirtualWheel = controls.virtualWheel.value;
     settings.NumberOfRounds = controls.roundCount.value;
     settings.BonusPuzzleCount = controls.bonusPuzzleCount.value;
 
@@ -60,6 +62,7 @@ export class SettingsComponent implements OnInit {
       bonusTime: this.settings.Settings.BonusSolveTimeSeconds,
       betweenTime: this.settings.Settings.BetweenRoundTimeSeconds,
       trippleTossUp: this.settings.Settings.TrippleTossUp,
+      virtualWheel: this.settings.Settings.UseVirtualWheel,
       roundCount: this.settings.Settings.NumberOfRounds,
       bonusPuzzleCount: this.settings.Settings.BonusPuzzleCount
     });
