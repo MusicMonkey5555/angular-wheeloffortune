@@ -49,6 +49,10 @@ export class ScoreService {
     this.players[this.currentPlayerIndex].bankrumpt();
   }
 
+  public setHasMillionWedge(){
+    this.players[this.currentPlayerIndex].setHasMillionWedge();
+  }
+
   public getWinnerIndexes(): number[] {
     let maxScore: number = -1;
     let winnerIndexes: number[];

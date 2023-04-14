@@ -26,7 +26,7 @@
 
 .container div{
 	height:50%;
-	width:50px;
+	width:100px;
 	position: absolute;
 	clip-path: polygon(100% 0 , 50% 100% , 0 0 );
 	transform:translateX(-50%);
@@ -39,7 +39,7 @@
 	font-weight:bold;
 	font-family:sans-serif;
 	color:#fff;
-	left:210px;
+	left:200px;
 }
 
 .container > div.wedge:first-child{
@@ -50,7 +50,9 @@
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   font-size: large;
   padding-top: 10px;
+  padding-bottom: 100px;
   white-space: pre;
+  text-align: center;
 }
 
 .verticle {

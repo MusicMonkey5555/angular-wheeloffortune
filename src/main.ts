@@ -1,5 +1,5 @@
 import 'zone.js/dist/zone';
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { Puzzle } from './puzzle';
@@ -18,6 +18,8 @@ import { ScoreBoardComponent } from './score-board/score-board.component';
 import { GameActions } from './game-actions.enum';
 import { CountDownTimer } from './count-down-timer';
 import { WheelComponent } from './wheel/wheel.component';
+import { WheelWedge } from './wheel-wedge';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'wof-app',
@@ -71,6 +73,7 @@ export class App {
   editSetting:string = "settings";
   private puzzleGuess:string = "";
   private spinPoints:number = 0;
+  private millionWedge:boolean = true;
   private revealedCount:number = 0;
   displayRoundScores:boolean = true;
   get LetterCount(){ return this.revealedCount; }
@@ -94,12 +97,38 @@ export class App {
     this.addPlayer("Monroe");
     this.addPlayer("Kelsey");
     this.startGame();
+    //this.score.setHasMillionWedge();
     this.chooseSpin();
     /*
     this.onEnterPoints('200');
     this.onLetterGuess('b');
     this.onVowelGuess('o');
     */
+  }
+
+  public onWheelStopped(wedge:WheelWedge){
+    console.log(wedge);
+    if(Number.isNaN(Number(wedge.value))){
+      switch(wedge.value.replace('\n','')){
+        case "LOOSEATURN":
+          this.nextTurn();
+          break;
+        case "BANKRUPT":
+          this.bankrupt();
+          break;
+        case "ONEMILLION$DOLLARS":
+          if(this.score.CurrentPlayer.HasMillionWedge){
+            this.spinPoints = this.settings.Settings.MillionWedgePoints;
+          } else {
+            this.millionWedge = true;
+          }
+          this.chooseGuessLetter();
+          break;
+      }
+    } else {
+      this.onEnterPoints(wedge.value);
+      this.chooseGuessLetter();
+    }
   }
 
   public onEnterPoints(points:string){
@@ -318,6 +347,7 @@ export class App {
     this.spinPoints = 0;
     this.roundSecondsLeft = 0;
     this.puzzleGuess = "";
+    this.millionWedge = false;
     this.roundTimer = null;
     this.score.nextPlayer();
   }
@@ -362,6 +392,7 @@ export class App {
       this.noMoreVowels = false;
       this.lettersGuessed = [];
       this.roundTimer = null;
+      this.millionWedge = false;
       return true;
     } else {
       return false;
@@ -414,6 +445,10 @@ export class App {
         if (revealed > 0) {
           this.revealedCount = revealed;
           this.score.addScore(points, revealed);
+          if(this.millionWedge){
+            this.score.setHasMillionWedge();
+            this.millionWedge = false;
+          }
           return true;
         } else {
           this.nextTurn();

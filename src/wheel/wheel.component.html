@@ -1,5 +1,5 @@
 <div class="spinner-group">
-  <button class="spin-btn" (click)="rotateFunction()">Spin</button>
+  <button class="spin-btn" [disabled]="moveArrow" (click)="rotateFunction()">Spin</button>
   <span class="arrow" [ngClass]="{ 'flick-left': moveArrow }"></span>
   <div
     class="container"
@@ -11,8 +11,9 @@
       [ngClass]="{'verticle': isNumber(wedge.value) || wedge.value === 'BANKRUPT'}"
       [ngStyle]="{
         'background-color': wedge.color,
+        'width.px': widthOfWedge,
         'color': (wedge.color === 'black' ? 'white' : 'black'),
-        'transform': (i === 0 ? '' : 'rotate(' + (i * (315 / Wedges.length-1)) + 'deg)')
+        'transform': (i === 0 ? '' : 'rotate(' + calculateWedgeRotation(i) + 'deg)')
       }"
     >{{displayWedgeValue(wedge)}}</div>
   </div>

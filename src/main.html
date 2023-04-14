@@ -15,7 +15,7 @@
 ></app-score-board>
 <br />
 
-<app-wheel *ngIf="Mode !== GameModes.Setup && Settings.UseVirtualWheel && Action === GameActions.Spin"></app-wheel>
+<app-wheel *ngIf="Mode !== GameModes.Setup && Settings.UseVirtualWheel && Action === GameActions.Spin" (onWheelStopped)="onWheelStopped($event)"></app-wheel>
 
 <label *ngIf="Mode !== GameModes.Setup && Action === GameActions.GuessLetter && LetterCount === 0">Guess Letter</label>
 <input
@@ -31,6 +31,7 @@
   type="number"
   *ngIf="Mode !== GameModes.Setup && Action == GameActions.Spin"
   #enterPoints
+  value="{{SpinPoints}}"
   (keyup)="onEnterPoints(enterPoints.value)"
 />
 

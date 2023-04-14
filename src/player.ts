@@ -3,12 +3,14 @@ export class Player {
   private color: string = '';
   private score: number = 0;
   private totalScore: number = 0;
+  private hasMillionWedge:boolean = false;
   private roundScore: number[];
   get Name() { return this.name; }
   get Color() { return this.color; }
   get Score() { return this.score; }
   get TotalScore() { return this.totalScore; }
   get Rounds(): number[] { return this.roundScore.map(v => v); }
+  get HasMillionWedge():boolean { return this.hasMillionWedge; }
 
   constructor(name: string, color:string){
     this.name = name;
@@ -25,6 +27,11 @@ export class Player {
 
   public bankrumpt(){
     this.score = 0;
+    this.hasMillionWedge = false;
+  }
+
+  public setHasMillionWedge(){
+    this.hasMillionWedge = true;
   }
 
   public addScore(points: number): boolean {

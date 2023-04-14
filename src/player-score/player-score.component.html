@@ -4,4 +4,5 @@
     <div class="player-name" >{{player.Name}}</div>
     <div class="player-score" [ngStyle]="{'background-color': player.Color}">${{displayRound ? Score : TotalScore}}</div>
   </div>
+  <div class="million-wedge" *ngIf="player.HasMillionWedge">ONE MILLION $ DOLLARS</div>
 </div>

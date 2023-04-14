@@ -8,4 +8,5 @@ export class Settings {
   public BonusSolveTimeSeconds: number = 10;
   public TrippleTossUp:boolean = false;
   public UseVirtualWheel:boolean = true;
+  public MillionWedgePoints:number = 1000;
 }

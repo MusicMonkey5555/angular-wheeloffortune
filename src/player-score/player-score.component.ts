@@ -1,4 +1,4 @@
-import { NgClass, NgStyle } from '@angular/common';
+import { NgClass, NgIf, NgStyle } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Player } from '../player';
 
@@ -7,7 +7,7 @@ import { Player } from '../player';
   standalone: true,
   templateUrl: './player-score.component.html',
   styleUrls: ['./player-score.component.css'],
-  imports: [NgStyle,NgClass]
+  imports: [NgStyle,NgClass,NgIf]
 })
 export class PlayerScoreComponent implements OnInit {
   @Input() player:Player;
