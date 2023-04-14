@@ -17,11 +17,12 @@ import { Settings } from './settings';
 import { ScoreBoardComponent } from './score-board/score-board.component';
 import { GameActions } from './game-actions.enum';
 import { CountDownTimer } from './count-down-timer';
+import { WheelComponent } from './wheel/wheel.component';
 
 @Component({
   selector: 'wof-app',
   standalone: true,
-  imports: [CommonModule, PuzzleBoardComponent, SettingsComponent, SetPuzzlesComponent,ScoreBoardComponent],
+  imports: [CommonModule, PuzzleBoardComponent, SettingsComponent, SetPuzzlesComponent,ScoreBoardComponent, WheelComponent],
   providers: [ScoreService, SettingsService],
   templateUrl: './main.html',
 })
@@ -92,8 +93,8 @@ export class App {
     this.addPlayer("Nathan Bowhay");
     this.addPlayer("Monroe");
     this.addPlayer("Kelsey");
-    /*
     this.startGame();
+    /*
     this.onEnterPoints('200');
     this.onLetterGuess('b');
     this.onVowelGuess('o');

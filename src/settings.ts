@@ -7,4 +7,5 @@ export class Settings {
   public BetweenRoundTimeSeconds: number = 5;
   public BonusSolveTimeSeconds: number = 10;
   public TrippleTossUp:boolean = false;
+  public UseVirtualWheel:boolean = true;
 }

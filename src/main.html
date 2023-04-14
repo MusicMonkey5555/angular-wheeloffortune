@@ -15,6 +15,8 @@
 ></app-score-board>
 <br />
 
+<app-wheel *ngIf="Mode !== GameModes.Setup && Settings.UseVirtualWheel && Action === GameActions.Spin"></app-wheel>
+
 <label *ngIf="Mode !== GameModes.Setup && Action === GameActions.GuessLetter && LetterCount === 0">Guess Letter</label>
 <input
   type="text"
