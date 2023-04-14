@@ -50,6 +50,7 @@
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   font-size: large;
   padding-top: 10px;
+  white-space: pre;
 }
 
 .verticle {
